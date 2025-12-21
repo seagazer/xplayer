@@ -27,8 +27,8 @@
   },
   "modules": [
     {
-      "name": "entry",
-      "srcPath": "./entry",
+      "name": "app",
+      "srcPath": "./app",
       "targets": [
         {
           "name": "default",
