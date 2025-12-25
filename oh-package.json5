@@ -2,6 +2,8 @@
   "modelVersion": "6.0.1",
   "description": "Please describe the basic information.",
   "dependencies": {
+    "@seagazer/ccplayer": "^1.2.9",
+    "@seagazer/cclyric": "^1.0.9"
   },
   "devDependencies": {
     "@ohos/hypium": "1.0.24",

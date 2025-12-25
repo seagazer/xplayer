@@ -10,7 +10,7 @@ const domain = 0x176
  */
 export class XLogger {
     private static DEBUG = true
-    private static FILTER_NAME = "XPlayer: "
+    private static FILTER_NAME = "Listen: "
 
     static setDebugger(debug: boolean) {
         XLogger.DEBUG = debug

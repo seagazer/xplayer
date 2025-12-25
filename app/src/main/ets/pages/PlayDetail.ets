@@ -1,7 +1,7 @@
 import { ThemeVM } from '../vm/ThemeVM'
 import { AppStorageV2 } from '@kit.ArkUI'
 import { duration2Text } from '../extensions/Extensions'
-import { CcLrcController, CcLyricView } from '@seagazer/cclyric'
+import { AlignMode, CcLyricController, CcLyricView } from '@seagazer/cclyric'
 import { MockData, StringParser } from '../mock/MockData'
 import { XLogger } from '../extensions/XLogger'
 import { PlayerVM } from '../vm/PlayerVM'
@@ -21,12 +21,12 @@ export struct PlayDetail {
     @Local player: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
     private playlist: PlaylistVM = AppStorageV2.connect<PlaylistVM>(PlaylistVM, () => new PlaylistVM())!
     @Local gradientRadius: number = 0
-    private lrcController = new CcLrcController()
+    private lrcController = new CcLyricController()
     private navPath = new NavPathStack()
 
-    @Monitor("player.progress")
+    @Monitor("player.playerProgress")
     onProgressChanged() {
-        this.lrcController.updatePosition(this.player.progress)
+        this.lrcController.updatePosition(this.player.playerProgress)
     }
 
     aboutToAppear(): void {
@@ -39,14 +39,14 @@ export struct PlayDetail {
             .setFadeColor(Color.Transparent)
             .setEmptyHint("未找到歌词")
         // todo test lyric data
-        const lyric = new StringParser().parse(MockData.krc3)
+        const lyric = new StringParser().parse(MockData.krc5)
         this.lrcController.setLyric(lyric)
     }
 
     build() {
         NavDestination() {
             Column() {
-                SymbolGlyph($r("sys.symbol.chevron_down"))
+                SymbolGlyph($r("sys.symbol.chevron_left"))
                     .fontColor([this.theme?.primaryColor])
                     .fontSize(32)
                     .clickEffect({ level: ClickEffectLevel.HEAVY, scale: 0.8 })
@@ -67,6 +67,12 @@ export struct PlayDetail {
                             .height(240)
                             .displayPriority(2)
                             .border({ radius: 8 })
+                            .shadow({
+                                radius: 16,
+                                color: this.theme.primaryColorDark,
+                                offsetX: 4,
+                                offsetY: 4
+                            })
                         Text(this.player.mediaTitle)
                             .fontColor(this.theme?.primaryColor)
                             .fontSize(24)
@@ -82,7 +88,7 @@ export struct PlayDetail {
                             })
                             .clip(false)
                             .margin({ top: 24 })
-                        Text(this.player.mediaAuthor)
+                        Text(this.player.mediaArtist)
                             .fontColor(this.theme?.primaryColor)
                             .fontSize(18)
                             .maxLines(1)
@@ -107,13 +113,13 @@ export struct PlayDetail {
                                 controller: this.lrcController,
                                 supportSeek: false,
                                 onDataSourceReady: () => {
-                                    XLogger.w(TAG, "init scroll to " + this.player.progress)
-                                    this.lrcController.updatePosition(this.player.progress, true)
+                                    XLogger.w(TAG, "init scroll to " + this.player.userProgress)
+                                    this.lrcController.updatePosition(this.player.playerProgress)
                                 }
                             })
                         }
                         .layoutWeight(1)
-                        .height("60%")
+                        .height("80%")
                         .justifyContent(FlexAlign.Center)
                         .transition(TransitionEffect.OPACITY.combine(TransitionEffect.translate({ y: 40 })))
                     }
@@ -128,19 +134,21 @@ export struct PlayDetail {
                     Slider({
                         style: SliderStyle.OutSet,
                         max: this.player.duration,
-                        value: this.player.progress
+                        value: this.player.userProgress
                     })
                         .width("100%")
                         .trackColor(this.theme?.primaryColorDark)
                         .selectedColor(this.theme?.primaryColor)
+                        .onChange((value, mode) => {
+                            this.player.onSeekChanged(value, mode)
+                        })
 
                     // TODO controller bar
                     Row() {
                         Text() {
-                            Span(duration2Text(this.player.progress))
+                            Span(duration2Text(this.player.playerProgress))
                                 .fontSize(24)
                             Span(" / " + duration2Text(this.player.duration))
-                                .fontWeight(FontWeight.Lighter)
                                 .fontSize(18)
                         }
                         .fontColor(this.theme?.primaryColor)
@@ -180,9 +188,11 @@ export struct PlayDetail {
                             .hoverEffect(HoverEffect.Highlight)
                             .margin({ left: 16 })
                             .onClick(() => {
-                                this.getUIContext().animateTo({ duration: 500 }, () => {
-                                    this.playlist.isEmpty = !this.playlist.isEmpty
-                                })
+                                if (this.player.isPlaying) {
+                                    this.player.pause()
+                                } else {
+                                    this.player.start()
+                                }
                             })
 
                         if (!this.playlist.isEmpty) {
@@ -214,7 +224,7 @@ export struct PlayDetail {
                 }
                 .width("100%")
                 .geometryTransition("controller")
-                .transition(TransitionEffect.OPACITY)
+                // .transition(TransitionEffect.OPACITY)
             }
             .height('100%')
             .width('100%')
@@ -242,6 +252,7 @@ export struct PlayDetail {
             let h = size.height as number
             this.gradientRadius = Math.min(w, h)
         })
+        .backgroundColor(this.theme.primaryColorDark)
     }
 
     private back() {

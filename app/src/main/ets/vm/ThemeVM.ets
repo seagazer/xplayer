@@ -1,12 +1,23 @@
+import { IVM } from "./IVM"
+
 /**
  *
  * Author: Seagazer
  * Date: 2025/12/15
  */
 @ObservedV2
-export class ThemeVM {
+export class ThemeVM implements IVM {
     @Trace primaryColor: string = DEFAULT_PRIMARY_COLOR
     @Trace primaryColorDark: string = DEFAULT_PRIMARY_COLOR_DARK
+    @Trace statusBarHeight: number = 0
+    @Trace navigationBarHeight: number = 0
+
+    async onCreate(context: UIContext) {
+    }
+
+    onDestroy(): void {
+
+    }
 
     reset() {
         this.primaryColor = DEFAULT_PRIMARY_COLOR

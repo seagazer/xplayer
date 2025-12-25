@@ -11,7 +11,7 @@ export struct FloatControllerView {
     @Param primaryColor: string = DEFAULT_PRIMARY_COLOR
     @Param primaryColorDark: string = DEFAULT_PRIMARY_COLOR_DARK
     @Param title: string = ""
-    @Param author: string = ""
+    @Param artist: string = ""
     @Param isPlaying: boolean = false
     @Param progress: number = 0
     @Param duration: number = 0
@@ -61,7 +61,7 @@ export struct FloatControllerView {
                         .maxLines(1)
                         .textOverflow({ overflow: TextOverflow.MARQUEE })
                         .width("100%")
-                    Text(this.author)
+                    Text(this.artist)
                         .fontColor(this.primaryColor)
                         .animation({ duration: this.animationDuration })
                         .fontSize(18)
@@ -109,10 +109,10 @@ export struct FloatControllerView {
         .constraintSize({ minHeight: 64 })
         .border({ radius: 12, width: 0 })
         .shadow({
-            radius: 16,
-            color: "#66000000",
+            radius: 12,
+            color: "#4d000000",
             offsetX: 12,
-            offsetY: 16
+            offsetY: 12
         })
         .backgroundColor(this.primaryColorDark)
         .animation({ duration: this.animationDuration })

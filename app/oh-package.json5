@@ -6,8 +6,6 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "@seagazer/ccplayer": "^1.2.9",
-    "@seagazer/cclyric": "file:../app/libs/lib.har"
   },
   "devDependencies": {},
   "dynamicDependencies": {}

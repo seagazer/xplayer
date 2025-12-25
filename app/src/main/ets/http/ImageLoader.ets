@@ -3,7 +3,8 @@ import { XLogger } from '../extensions/XLogger';
 import { util } from '@kit.ArkTS';
 import { rcp } from '@kit.RemoteCommunicationKit';
 import { Api } from '../api/Api';
-import { MediaInfo } from './MediaInfo';
+import { MediaInfo } from '../api/MediaInfo';
+import { Context } from '@kit.AbilityKit';
 
 const TAG = "[ImageLoader]"
 
@@ -17,9 +18,11 @@ export class ImageLoader {
     private session?: rcp.Session = undefined
     private default?: PixelMap = undefined
     private context: Context
+    private cacheDir: string
 
     constructor(context: Context) {
         this.context = context
+        this.cacheDir = context.cacheDir
     }
 
     async createDefault() {
@@ -28,7 +31,7 @@ export class ImageLoader {
             const imageSource = image.createImageSource(resource)
             this.default = await imageSource.createPixelMap()
         } catch (error) {
-
+            XLogger.e(TAG, "load default error= " + JSON.stringify(error))
         }
     }
 
@@ -38,21 +41,23 @@ export class ImageLoader {
                 this.session = rcp.createSession()
             }
             const response = await this.session.get(Api.QUERY_MEDIA_INFO(mediaTitle))
-            XLogger.w(TAG, "-----" + response.statusCode)
             const buffer = response.body
             const decoder = new util.TextDecoder()
             const result = decoder.decodeToString(new Uint8Array(buffer))
             const info = JSON.parse(result) as MediaInfo
-            XLogger.w(TAG, "-----" + new String(result))
             return info
         } catch (error) {
-            XLogger.e(TAG, "----" + JSON.stringify(error))
+            XLogger.e(TAG, "request media info error= " + JSON.stringify(error))
             return undefined
         }
     }
 
-    async getCoverImage(url: string) {
-        const cache = this.pixelMapCache.get(url)
+    async loadCoverImage(url: string) {
+        let cache = this.pixelMapCache.get(url)
+        if (cache !== undefined) {
+            return cache
+        }
+        cache = await this.readFromFile(url)
         if (cache !== undefined) {
             return cache
         }
@@ -69,6 +74,7 @@ export class ImageLoader {
                 const pixelmap = await imageSource.createPixelMap()
                 this.pixelMapCache.put(url, pixelmap)
                 XLogger.w(TAG, "download success")
+                this.cacheToFile(url, buffer)
                 return pixelmap
             } else {
                 if (this.default === undefined) {
@@ -87,5 +93,15 @@ export class ImageLoader {
                 await imageSource.release()
             }
         }
+    }
+
+    // todo get image from local file
+    private async readFromFile(url: string): Promise<PixelMap | undefined> {
+        return undefined
+    }
+
+    // todo save image to local file
+    private async cacheToFile(url: string, buffer: ArrayBuffer) {
+
     }
 }

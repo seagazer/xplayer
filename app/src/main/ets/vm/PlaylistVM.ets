@@ -1,4 +1,5 @@
-import { MediaSource } from "@seagazer/ccplayer"
+import { MediaFile } from '../file/MediaFile'
+import { IVM } from './IVM'
 
 /**
  *
@@ -6,9 +7,16 @@ import { MediaSource } from "@seagazer/ccplayer"
  * Date: 2025/12/16
  */
 @ObservedV2
-export class PlaylistVM {
+export class PlaylistVM implements IVM {
     @Trace isEmpty: boolean = true
-    @Trace playlist: MediaSource[] = []
+    @Trace playlist: MediaFile[] = []
     @Trace playingIndex: number = 0
-    @Trace playingItem?: MediaSource = undefined
+    @Trace playingItem?: MediaFile = undefined
+
+    async onCreate(context: UIContext) {
+    }
+
+    onDestroy(): void {
+
+    }
 }
