@@ -1,4 +1,4 @@
-import { IVM } from './IVM'
+import { IVM } from '../../../../base/IVM'
 import { DEFAULT_PRIMARY_COLOR } from './ThemeVM'
 
 /**

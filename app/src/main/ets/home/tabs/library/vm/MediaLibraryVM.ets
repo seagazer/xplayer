@@ -1,5 +1,5 @@
-import { MediaFile } from '../file/MediaFile'
-import { IVM } from './IVM'
+import { MediaFile } from '../../../../base/file/MediaFile'
+import { IVM } from '../../../../base/IVM'
 
 /**
  *
@@ -7,7 +7,7 @@ import { IVM } from './IVM'
  * Date: 2025/12/16
  */
 @ObservedV2
-export class PlaylistVM implements IVM {
+export class MediaLibraryVM implements IVM {
     @Trace isEmpty: boolean = true
     @Trace playlist: MediaFile[] = []
     @Trace playingIndex: number = 0

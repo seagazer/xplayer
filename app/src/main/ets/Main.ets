@@ -1,40 +1,29 @@
-import { SettingsVM } from '../vm/SettingsVM';
-import { Home } from './Home';
-import { PlayDetail } from './PlayDetail';
-import { Splash } from './Splash';
+import { SettingsVM } from './home/tabs/settings/vm/SettingsVM';
 import { AppStorageV2 } from '@kit.ArkUI';
+import { RouterConstants, RouterMapper } from './base/Router';
 
 @Entry
 @ComponentV2
 struct Index {
-    private path = new NavPathStack()
+    private navPathStack = new NavPathStack()
     private settings: SettingsVM = AppStorageV2.connect<SettingsVM>(SettingsVM, () => new SettingsVM())!
 
-    @Builder
-    navMap(title: string) {
-        if (title === "detail") {
-            PlayDetail()
-        } else {
-            Home()
-        }
+    aboutToAppear(): void {
+        this.navPathStack.replacePath({ name: RouterConstants.SPLASH }, false)
     }
 
     build() {
         Stack() {
-            Navigation(this.path) {
-                Splash({
-                    onReady: () => {
-                        this.path.replacePath({ name: "home" }, true)
-                    }
-                })
-            }
+            // app root view
+            Navigation(this.navPathStack)
             .width('100%')
             .height('100%')
-            .navDestination(this.navMap)
+                .navDestination(RouterMapper)
             .mode(NavigationMode.Stack)
             .hideTitleBar(true)
 
             if (!this.settings.appActive) {
+                // active MASK
                 Text("Listen By \n Seagazer")
                     .fontColor("#1affffff")
                     .fontSize(240)

@@ -1,6 +1,6 @@
 import { fileIo, picker } from '@kit.CoreFileKit';
 import { XLogger } from '../extensions/XLogger';
-import { PlaylistVM } from '../vm/PlaylistVM';
+import { MediaLibraryVM } from '../../home/tabs/library/vm/MediaLibraryVM';
 import { AppStorageV2, ComponentContent, UIContext } from '@kit.ArkUI';
 import { ImageLoader } from '../http/ImageLoader';
 import { Api } from '../api/Api';
@@ -38,7 +38,7 @@ function LoadingDialog() {
  * Date: 2025/12/22
  */
 export class FileLibrary {
-    private playlist: PlaylistVM = AppStorageV2.connect<PlaylistVM>(PlaylistVM, () => new PlaylistVM())!
+    private playlist: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
     private readonly endFix = ["mp3", "flac", "ogg"]
     private imageLoader: ImageLoader
     private context: UIContext

@@ -1,7 +1,7 @@
 import { CcPlayer, MediaSourceFactory, PlayerState } from '@seagazer/ccplayer'
-import { XLogger } from '../extensions/XLogger'
-import { MediaFile } from '../file/MediaFile'
-import { IVM } from './IVM'
+import { XLogger } from '../../base/extensions/XLogger'
+import { MediaFile } from '../../base/file/MediaFile'
+import { IVM } from '../../base/IVM'
 
 
 const TAG = "[PlayerVM]"

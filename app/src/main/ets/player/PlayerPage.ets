@@ -1,12 +1,12 @@
-import { ThemeVM } from '../vm/ThemeVM'
+import { ThemeVM } from '../home/tabs/settings/vm/ThemeVM'
 import { AppStorageV2 } from '@kit.ArkUI'
-import { duration2Text } from '../extensions/Extensions'
+import { duration2Text } from '../base/extensions/Extensions'
 import { AlignMode, CcLyricController, CcLyricView } from '@seagazer/cclyric'
 import { MockData, StringParser } from '../mock/MockData'
-import { XLogger } from '../extensions/XLogger'
-import { PlayerVM } from '../vm/PlayerVM'
-import { Palette } from '../view/Palette'
-import { PlaylistVM } from '../vm/PlaylistVM'
+import { XLogger } from '../base/extensions/XLogger'
+import { PlayerVM } from './vm/PlayerVM'
+import { Palette } from '../base/view/Palette'
+import { MediaLibraryVM } from '../home/tabs/library/vm/MediaLibraryVM'
 
 const TAG = "[PlayDetail]"
 
@@ -16,10 +16,10 @@ const TAG = "[PlayDetail]"
  * Date: 2025/12/16
  */
 @ComponentV2
-export struct PlayDetail {
+export struct PlayerPage {
     private theme: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
     @Local player: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
-    private playlist: PlaylistVM = AppStorageV2.connect<PlaylistVM>(PlaylistVM, () => new PlaylistVM())!
+    private playlist: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
     @Local gradientRadius: number = 0
     private lrcController = new CcLyricController()
     private navPath = new NavPathStack()

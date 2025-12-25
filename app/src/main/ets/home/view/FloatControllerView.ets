@@ -1,5 +1,5 @@
-import { duration2Text } from '../extensions/Extensions'
-import { DEFAULT_PRIMARY_COLOR, DEFAULT_PRIMARY_COLOR_DARK } from '../vm/ThemeVM'
+import { duration2Text } from '../../base/extensions/Extensions'
+import { DEFAULT_PRIMARY_COLOR, DEFAULT_PRIMARY_COLOR_DARK } from '../tabs/settings/vm/ThemeVM'
 
 /**
  *

@@ -1,4 +1,4 @@
-import { IVM } from "./IVM"
+import { IVM } from "../../../../base/IVM"
 
 /**
  *
@@ -9,8 +9,10 @@ import { IVM } from "./IVM"
 export class ThemeVM implements IVM {
     @Trace primaryColor: string = DEFAULT_PRIMARY_COLOR
     @Trace primaryColorDark: string = DEFAULT_PRIMARY_COLOR_DARK
-    @Trace statusBarHeight: number = 0
-    @Trace navigationBarHeight: number = 0
+    @Trace rootPaddingTop: number = 0
+    @Trace rootPaddingBottom: number = 0
+    @Trace rootPaddingLeft: number = 16
+    @Trace rootPaddingRight: number = 16
 
     async onCreate(context: UIContext) {
     }
