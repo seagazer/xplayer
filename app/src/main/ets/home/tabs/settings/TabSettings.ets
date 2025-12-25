@@ -1,11 +1,12 @@
-import { FileLibrary } from '../file/FileLibrary'
-import { PlaylistVM } from '../vm/PlaylistVM'
+import { FileLibrary } from '../../../base/file/FileLibrary'
+import { MediaLibraryVM } from '../library/vm/MediaLibraryVM'
 import { AppStorageV2, ComponentContent } from '@kit.ArkUI'
-import { Palette } from '../view/Palette'
-import { PlayerVM } from '../vm/PlayerVM'
-import { ThemeVM } from '../vm/ThemeVM'
-import { SettingsVM } from '../vm/SettingsVM'
-import { SettingsButtonItem, SettingsCategory, SettingsSwitchItem, SettingsTextItem } from '../view/SettingsItem'
+import { Palette } from '../../../base/view/Palette'
+import { PlayerVM } from '../../../player/vm/PlayerVM'
+import { ThemeVM } from './vm/ThemeVM'
+import { SettingsVM } from './vm/SettingsVM'
+import { SettingsButtonItem, SettingsCategory, SettingsSwitchItem, SettingsTextItem } from './view/SettingsItem'
+import { tabTitleStyle } from '../Style'
 
 
 const TAG = "[TabSettings]"
@@ -15,9 +16,14 @@ const TAG = "[TabSettings]"
  * Author: Seagazer
  * Date: 2025/12/23
  */
+@Builder
+export function TabSettingsView() {
+    TabSettings()
+}
+
 @ComponentV2
-export struct TabSettings {
-    private playlist: PlaylistVM = AppStorageV2.connect<PlaylistVM>(PlaylistVM, () => new PlaylistVM())!
+struct TabSettings {
+    private playlist: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
     private palette = new Palette()
     private player: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
     private theme: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
@@ -26,8 +32,8 @@ export struct TabSettings {
     build() {
         Column() {
             Text("设置")
-                .fontSize(36)
-                .fontWeight(FontWeight.Bold)
+                .attributeModifier(tabTitleStyle)
+
             Scroll() {
                 Column() {
                     // storage library
@@ -77,10 +83,10 @@ export struct TabSettings {
         .height("100%")
         .alignItems(HorizontalAlign.Start)
         .padding({
-            top: this.theme.statusBarHeight,
-            bottom: this.theme.navigationBarHeight,
-            left: 16,
-            right: 16
+            top: this.theme.rootPaddingTop,
+            bottom: this.theme.rootPaddingBottom,
+            left: this.theme.rootPaddingLeft,
+            right: this.theme.rootPaddingRight
         })
     }
 

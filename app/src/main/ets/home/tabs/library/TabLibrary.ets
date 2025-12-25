@@ -1,18 +1,24 @@
-import { PlaylistVM } from "../vm/PlaylistVM"
-import { AppStorageV2 } from "@kit.ArkUI"
-import { duration2Text } from "../extensions/Extensions"
-import { PlayerVM } from "../vm/PlayerVM"
-import { ThemeVM } from "../vm/ThemeVM"
-import { Palette } from "../view/Palette"
+import { MediaLibraryVM } from './vm/MediaLibraryVM'
+import { AppStorageV2 } from '@kit.ArkUI'
+import { duration2Text } from '../../../base/extensions/Extensions'
+import { PlayerVM } from '../../../player/vm/PlayerVM'
+import { ThemeVM } from '../settings/vm/ThemeVM'
+import { Palette } from '../../../base/view/Palette'
+import { tabTitleStyle } from '../Style'
 
 /**
  *
  * Author: Seagazer
  * Date: 2025/12/24
  */
+@Builder
+export function TabLibraryView() {
+    TabLibrary()
+}
+
 @ComponentV2
-export struct TabLibrary {
-    private playlist: PlaylistVM = AppStorageV2.connect<PlaylistVM>(PlaylistVM, () => new PlaylistVM())!
+struct TabLibrary {
+    private playlist: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
     private player: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
     private theme: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
     private palette = new Palette()
@@ -20,12 +26,13 @@ export struct TabLibrary {
     build() {
         Column() {
             Text("音乐库")
-                .fontSize(36)
-                .fontWeight(FontWeight.Bold)
+                .attributeModifier(tabTitleStyle)
 
-            Text("共" + this.playlist.playlist.length + "首音乐")
-                .fontSize(24)
-                .margin({ top: 24 })
+            Row() {
+                Text("共" + this.playlist.playlist.length + "首音乐")
+                    .fontSize(24)
+            }
+            .margin({ top: 24 })
 
             Column() {
                 List({ space: 12 }) {
@@ -93,10 +100,10 @@ export struct TabLibrary {
         .justifyContent(FlexAlign.Start)
         .alignItems(HorizontalAlign.Start)
         .padding({
-            top: this.theme.statusBarHeight,
-            bottom: this.theme.navigationBarHeight,
-            left: 16,
-            right: 16
+            top: this.theme.rootPaddingTop,
+            bottom: this.theme.rootPaddingBottom,
+            left: this.theme.rootPaddingLeft,
+            right: this.theme.rootPaddingRight
         })
     }
 }
