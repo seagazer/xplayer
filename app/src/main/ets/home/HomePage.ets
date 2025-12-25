@@ -63,7 +63,7 @@ export struct HomePage {
                 .width("100%")
                 .height("100%")
 
-                if (this.playlist.playingItem !== undefined) {
+                // if (this.playlist.playingItem !== undefined) {
                     FloatControllerView({
                         primaryColor: this.theme.primaryColor,
                         primaryColorDark: this.theme.primaryColorDark,
@@ -82,14 +82,14 @@ export struct HomePage {
                         },
                         onContainerClick: () => {
                             this.getUIContext().animateTo({ duration: 300 }, () => {
-                                this.navigation.pushPath({ name: "detail" }, false)
+                                this.navigation.pushPath({ name: RouterConstants.PLAYER }, false)
                             })
                         }
                     }).width("80%")
                         .height(80)
                         .geometryTransition("controller", { follow: true })
                         .margin({ bottom: 24 })
-                }
+                // }
 
             }.align(Alignment.Bottom)
         }

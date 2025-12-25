@@ -1,14 +1,14 @@
 import { ThemeVM } from '../home/tabs/settings/vm/ThemeVM'
 import { AppStorageV2 } from '@kit.ArkUI'
 import { duration2Text } from '../base/extensions/Extensions'
-import { AlignMode, CcLyricController, CcLyricView } from '@seagazer/cclyric'
+import { CcLyricController, CcLyricView } from '@seagazer/cclyric'
 import { MockData, StringParser } from '../mock/MockData'
 import { XLogger } from '../base/extensions/XLogger'
 import { PlayerVM } from './vm/PlayerVM'
 import { Palette } from '../base/view/Palette'
 import { MediaLibraryVM } from '../home/tabs/library/vm/MediaLibraryVM'
 
-const TAG = "[PlayDetail]"
+const TAG = "[PlayerPage]"
 
 /**
  *
@@ -39,7 +39,8 @@ export struct PlayerPage {
             .setFadeColor(Color.Transparent)
             .setEmptyHint("未找到歌词")
         // todo test lyric data
-        const lyric = new StringParser().parse(MockData.krc5)
+        const lyric = new StringParser().parse(MockData.krc6)
+        XLogger.w(TAG, JSON.stringify(lyric))
         this.lrcController.setLyric(lyric)
     }
 
@@ -51,7 +52,7 @@ export struct PlayerPage {
                     .fontSize(32)
                     .clickEffect({ level: ClickEffectLevel.HEAVY, scale: 0.8 })
                     .hoverEffect(HoverEffect.Highlight)
-                    .margin({ left: 16, top: 16 })
+                    .margin({ left: 16 })
                     .opacity(0.5)
                     .transition(TransitionEffect.OPACITY)
                     .animation({ duration: 500 })
@@ -228,16 +229,20 @@ export struct PlayerPage {
             }
             .height('100%')
             .width('100%')
+            .padding({
+                top: this.theme.rootPaddingTop,
+                bottom: this.theme.rootPaddingBottom,
+            })
             .alignItems(HorizontalAlign.Start)
             .radialGradient({
                 center: ["50%", "50%"],
                 radius: this.gradientRadius === 0 ? "100%" : this.gradientRadius,
                 colors: [[this.theme!.primaryColor, 0], ["#bf000000", 1]]
             })
-            .padding({ top: 32 })
         }
-        .height('100%')
         .width('100%')
+        .height('100%')
+        .backgroundColor("#80000000")
         .title("detail")
         .hideTitleBar(true)
         .onReady((context: NavDestinationContext) => {
@@ -252,7 +257,6 @@ export struct PlayerPage {
             let h = size.height as number
             this.gradientRadius = Math.min(w, h)
         })
-        .backgroundColor(this.theme.primaryColorDark)
     }
 
     private back() {
