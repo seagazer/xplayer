@@ -5,7 +5,7 @@ import { Palette } from '../../../base/view/Palette'
 import { PlayerVM } from '../../../player/vm/PlayerVM'
 import { ThemeVM } from './vm/ThemeVM'
 import { SettingsVM } from './vm/SettingsVM'
-import { SettingsButtonItem, SettingsCategory, SettingsSwitchItem, SettingsTextItem } from './view/SettingsItem'
+import { SettingsButtonItem, SettingsCategory, SettingsSwitchItem, SettingsTextItem } from './view/SettingsItemView'
 import { tabTitleStyle } from '../Style'
 
 
@@ -38,38 +38,47 @@ struct TabSettings {
                 Column() {
                     // storage library
                     SettingsCategory({ title: "媒体库" })
+                        .margin({ top: 24 })
                     SettingsButtonItem({
                         title: "歌曲文件", button: "添加", onAction: () => {
                             this.test()
                         }
-                    })
+                    }).margin({ top: 16 })
 
                     // theme
                     SettingsCategory({ title: "个性化" })
+                        .margin({ top: 24 })
                     SettingsButtonItem({
                         title: "主题色", button: "取色", onAction: () => {
                         }
-                    })
+                    }).margin({ top: 16 })
                     SettingsSwitchItem({ title: "动态主题色" })
+                        .margin({ top: 16 })
 
                     // lyric
                     SettingsCategory({ title: "歌词" })
+                        .margin({ top: 24 })
                     SettingsSwitchItem({ title: "左对齐" })
+                        .margin({ top: 16 })
                     SettingsSwitchItem({ title: "自动下载歌词" })
+                        .margin({ top: 16 })
                     SettingsButtonItem({
                         title: "字体大小", button: "20", onAction: () => {
 
                         }
-                    })
+                    }).margin({ top: 16 })
                     SettingsSwitchItem({ title: "动态主题色" })
+                        .margin({ top: 16 })
                     // about
                     SettingsCategory({ title: "关于" })
+                        .margin({ top: 24 })
                     SettingsTextItem({ title: "当前版本", value: this.settings.appVersion })
+                        .margin({ top: 16 })
                     SettingsButtonItem({
-                        title: "激活", button: "输入激活码", onAction: () => {
+                        title: "激活状态", button: "激活", onAction: () => {
                             this.openActiveDialog()
                         }
-                    })
+                    }).margin({ top: 16 })
 
                     Blank().height(100)
                 }

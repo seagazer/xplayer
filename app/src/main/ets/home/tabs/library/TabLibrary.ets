@@ -30,7 +30,7 @@ struct TabLibrary {
 
             Row() {
                 Text("共" + this.playlist.playlist.length + "首音乐")
-                    .fontSize(24)
+                    .fontSize(20)
             }
             .margin({ top: 24 })
 

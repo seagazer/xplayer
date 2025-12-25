@@ -33,15 +33,15 @@ export struct SplashPage {
                         .fontWeight(FontWeight.Bold)
                         .opacity(this.alpha[index])
                         .onAppear(() => {
-                            this.getUIContext().animateTo({
-                                duration: 1000, delay: index * 200, onFinish: () => {
-                                    if (index === this.appName.length - 1) {
-                                        this.initApp()
-                                    }
-                                }
-                            }, () => {
-                                this.alpha[index] = 1
-                            })
+                            // this.getUIContext().animateTo({
+                            //     duration: 1000, delay: index * 200, onFinish: () => {
+                            //         if (index === this.appName.length - 1) {
+                            //         }
+                            //     }
+                            // }, () => {
+                            //     this.alpha[index] = 1
+                            // })
+                            this.initApp()
                         })
                 })
             }

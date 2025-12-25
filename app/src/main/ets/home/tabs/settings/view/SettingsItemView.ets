@@ -11,6 +11,7 @@ export struct SettingsCategory {
                 .width("100%")
                 .height(1)
                 .margin({ top: 8 })
+                .backgroundColor("#80000000")
         }
         .width("100%")
         .alignItems(HorizontalAlign.Start)
@@ -31,6 +32,7 @@ export struct SettingsTextItem {
                 .fontSize(18)
         }
         .width("100%")
+        .padding({ left: 16 })
         .justifyContent(FlexAlign.SpaceBetween)
     }
 }
@@ -47,6 +49,7 @@ export struct SettingsButtonItem {
                 .fontSize(18)
 
             Text(this.button)
+                .fontSize(18)
                 .textAlign(TextAlign.Center)
                 .padding({
                     left: 16,
@@ -56,7 +59,6 @@ export struct SettingsButtonItem {
                 })
                 .constraintSize({ minWidth: 100 })
                 .border({ radius: 4 })
-                .fontSize(18)
                 .backgroundColor("#80ffffff")
                 .clickEffect({ level: ClickEffectLevel.MIDDLE, scale: 0.95 })
                 .onClick(() => {
@@ -64,6 +66,7 @@ export struct SettingsButtonItem {
                 })
         }
         .width("100%")
+        .padding({ left: 16 })
         .justifyContent(FlexAlign.SpaceBetween)
     }
 }
@@ -75,13 +78,14 @@ export struct SettingsSwitchItem {
     build() {
         Row() {
             Text(this.title)
-                .fontSize(20)
+                .fontSize(16)
 
             Toggle({ type: ToggleType.Switch })
                 .width(50)
                 .height(24)
         }
         .width("100%")
+        .padding({ left: 16 })
         .justifyContent(FlexAlign.SpaceBetween)
     }
 }

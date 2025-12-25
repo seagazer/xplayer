@@ -30,15 +30,15 @@ export const TabConfig: TabItem[] = [
     },
     {
         index: 3,
-        icon: $r("sys.symbol.music_note_list"),
-        title: "播放列表",
-        tabView: wrapBuilder(TabPlaylistView)
-    },
-    {
-        index: 4,
         icon: $r("sys.symbol.gearshape"),
         title: "设置",
         tabView: wrapBuilder(TabSettingsView)
+    },
+    {
+        index: 4,
+        icon: $r("sys.symbol.music_note_list"),
+        title: "播放列表",
+        tabView: wrapBuilder(TabPlaylistView)
     },
 ]
 
