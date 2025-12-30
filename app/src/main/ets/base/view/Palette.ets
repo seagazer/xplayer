@@ -29,9 +29,9 @@ export class Palette {
         try {
             const color = this.picker.getMainColorSync()
             this.lightColorValue = [this.light(color.red), this.light(color.green), this.light(color.blue)]
-            const light = Palette.rgbaToHex(this.lightColorValue[0], this.lightColorValue[1], this.lightColorValue[2])
+            const light = this.rgbaToHex(this.lightColorValue[0], this.lightColorValue[1], this.lightColorValue[2])
             this.darkColorValue = [this.dark(color.red), this.dark(color.green), this.dark(color.blue)]
-            const dark = Palette.rgbaToHex(this.darkColorValue[0], this.darkColorValue[1], this.darkColorValue[2])
+            const dark = this.rgbaToHex(this.darkColorValue[0], this.darkColorValue[1], this.darkColorValue[2])
             return [light, dark]
         } catch (error) {
             return []
@@ -66,24 +66,17 @@ export class Palette {
         }
     }
 
-    static rgbaToHex(r: number, g: number, b: number): string {
+    rgbaToHex(r: number, g: number, b: number): string {
         r = Math.max(0, Math.min(255, Math.round(r)))
         g = Math.max(0, Math.min(255, Math.round(g)))
         b = Math.max(0, Math.min(255, Math.round(b)))
-        let hex = '#' + Palette.fillHex(r) + Palette.fillHex(g) + Palette.fillHex(b)
+        let hex = '#' + this.fillHex(r) + this.fillHex(g) + this.fillHex(b)
         return hex.toUpperCase()
     }
 
-    static fillHex(value: number): string {
+    fillHex(value: number): string {
         const hex = value.toString(16)
         return hex.length === 1 ? '0' + hex : hex
     }
 
-    static stringToHex(hexColor: string): number {
-        let color: string = hexColor.startsWith('#') ? hexColor.substring(1) : hexColor;
-        if (color.length === 6) {
-            color = 'ff' + color;
-        }
-        return parseInt(color, 16);
-    }
 }

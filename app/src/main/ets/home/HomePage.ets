@@ -2,22 +2,21 @@ import { ThemeVM } from './tabs/settings/vm/ThemeVM'
 import { AppStorageV2 } from '@kit.ArkUI'
 import { FloatControllerView } from './view/FloatControllerView'
 import { PlayerVM } from '../player/vm/PlayerVM'
-import { common } from '@kit.AbilityKit'
 import { TabItemView } from './view/TabItemView'
-import { MediaLibraryVM } from './tabs/library/vm/MediaLibraryVM'
 import { RouterConstants } from '../base/Router'
 import { TabConfig, TabItem } from './TabConfig'
+import { UIConstants } from '../base/UIConstants'
+import { PlayingAnimation } from '../base/view/PlayingAnimation'
 
 /**
  *
  * Author: Seagazer
  * Date: 2025/12/16
  */
-@ComponentV2
+@ComponentV2({ freezeWhenInactive: true })
 export struct HomePage {
     private theme: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
     private player: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
-    private mediaLibrary: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
     private navigation = new NavPathStack()
     @Local gradientRadius: number = 0
     @Local selectedTabIndex: number = 0
@@ -29,6 +28,24 @@ export struct HomePage {
                 // todo tab container
                 Row() {
                     Column({ space: 8 }) {
+                        Row() {
+                            Text("Listen")
+                                .fontSize(36)
+                                .fontWeight(FontWeight.Bold)
+                                .fontColor(UIConstants.DEFAULT_PRIMARY_COLOR)
+                            PlayingAnimation({
+                                spinColor: this.theme.primaryColor,
+                                spinSize: 24
+                            })
+                                .margin({ left: 16 })
+                                .visibility(this.player.isPlaying ? Visibility.Visible : Visibility.Hidden)
+                                .animation({ duration: 500 })
+                        }
+                        .width("100%")
+                        .margin({ bottom: 16 })
+                        .alignItems(VerticalAlign.Center)
+                        .justifyContent(FlexAlign.Start)
+
                         ForEach(TabConfig, (item: TabItem) => {
                             TabItemView({
                                 index: item.index,
@@ -119,11 +136,12 @@ export struct HomePage {
         .onReady((context) => {
             this.navigation = context.pathStack
         })
-        .onBackPressed(() => {
-            const context = this.getUIContext().getHostContext() as common.UIAbilityContext
-            context.terminateSelf().catch(() => {
-            })
-            return true
-        })
+
+        // .onBackPressed(() => {
+        //     const context = this.getUIContext().getHostContext() as common.UIAbilityContext
+        //     context.terminateSelf().catch(() => {
+        //     })
+        //     return true
+        // })
     }
 }

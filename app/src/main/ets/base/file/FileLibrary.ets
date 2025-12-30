@@ -81,7 +81,6 @@ export class FileLibrary {
         this.context.getPromptAction().closeCustomDialog(this.loadingDialog).catch(() => {
         })
         return list
-        // todo add to db
     }
 
     private checkNull(value: string | undefined) {

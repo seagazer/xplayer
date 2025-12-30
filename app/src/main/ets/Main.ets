@@ -21,6 +21,7 @@ struct Index {
                 .navDestination(RouterMapper)
             .mode(NavigationMode.Stack)
             .hideTitleBar(true)
+                .hideNavBar(true)
 
             if (!this.settings.appActive) {
                 // active MASK

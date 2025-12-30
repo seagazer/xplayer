@@ -7,7 +7,7 @@ import { XLogger } from '../base/extensions/XLogger'
 import { common } from '@kit.AbilityKit'
 import { RouterConstants } from '../base/Router'
 import { DbHelper } from '../base/db/DbHelper'
-import { Md5 } from '../base/extensions/Extensions'
+import { UIConstants } from '../base/UIConstants'
 
 const TAG = "[Splash]"
 
@@ -32,17 +32,18 @@ export struct SplashPage {
                 ForEach(this.appName, (char: string, index: number) => {
                     Text(char)
                         .fontSize(40)
+                        .fontColor(UIConstants.DEFAULT_PRIMARY_COLOR)
                         .fontWeight(FontWeight.Bold)
                         .opacity(this.alpha[index])
                         .onAppear(() => {
-                            // this.getUIContext().animateTo({
-                            //     duration: 1000, delay: index * 200, onFinish: () => {
-                            //         if (index === this.appName.length - 1) {
-                            //         }
-                            //     }
-                            // }, () => {
-                            //     this.alpha[index] = 1
-                            // })
+                            this.getUIContext().animateTo({
+                                duration: 1000, delay: index * 200, onFinish: () => {
+                                    if (index === this.appName.length - 1) {
+                                    }
+                                }
+                            }, () => {
+                                this.alpha[index] = 1
+                            })
                         })
                 })
             }
@@ -51,7 +52,9 @@ export struct SplashPage {
             .width("100%")
             .height("100%")
             .onAppear(() => {
-                this.initApp()
+                setTimeout(() => {
+                    this.initApp()
+                }, 2000)
             })
         }
         .width("100%")

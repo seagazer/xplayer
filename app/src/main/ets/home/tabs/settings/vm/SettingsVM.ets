@@ -1,5 +1,5 @@
 import { IVM } from '../../../../base/IVM'
-import { DEFAULT_PRIMARY_COLOR } from './ThemeVM'
+import { UIConstants } from '../../../../base/UIConstants'
 
 /**
  *
@@ -10,7 +10,7 @@ import { DEFAULT_PRIMARY_COLOR } from './ThemeVM'
 export class SettingsVM implements IVM {
     // theme
     @Trace autoMainTheme: boolean = false
-    @Trace mainThemeColor: ResourceColor = DEFAULT_PRIMARY_COLOR
+    @Trace mainThemeColor: ResourceColor = UIConstants.DEFAULT_PRIMARY_COLOR
     // lyric
     @Trace autoLyricTheme: boolean = false
     @Trace autoDownloadLyric: boolean = false
@@ -18,7 +18,7 @@ export class SettingsVM implements IVM {
     @Trace lyricTextSize: number = 24
     // version
     @Trace appVersion: string = "1.0.0"
-    @Trace appActive: boolean = false
+    @Trace appActive: boolean = true
 
     async onCreate(context: UIContext) {
     }

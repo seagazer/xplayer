@@ -2,8 +2,11 @@ import { CcPlayer, MediaSourceFactory, PlayerState } from '@seagazer/ccplayer'
 import { XLogger } from '../../base/extensions/XLogger'
 import { MediaFile } from '../../base/file/MediaFile'
 import { IVM } from '../../base/IVM'
-import { avSession } from '@kit.AVSessionKit'
 import { common, wantAgent } from '@kit.AbilityKit'
+import { ImageLoader } from '../../base/http/ImageLoader'
+import { ThemeVM } from '../../home/tabs/settings/vm/ThemeVM'
+import { SettingsVM } from '../../home/tabs/settings/vm/SettingsVM'
+import { AppStorageV2 } from '@kit.ArkUI'
 
 
 const TAG = "[PlayerVM]"
@@ -23,7 +26,8 @@ export class PlayerVM implements IVM {
     @Trace mediaTitle: string = ""
     @Trace mediaArtist: string = ""
     @Trace showLyric: boolean = false
-    @Trace coverUrl: string | undefined = undefined
+    @Trace coverUrl?: string = undefined
+    private context?: UIContext = undefined
     private player?: CcPlayer = undefined
     private isSeeking = false
     private preparedListener = () => {
@@ -46,6 +50,7 @@ export class PlayerVM implements IVM {
     }
 
     async onCreate(context: UIContext) {
+        this.context = context
         this.player = new CcPlayer(context.getHostContext()!)
         this.player.addOnPreparedListener(this.preparedListener)
             .addOnProgressChangedListener(this.progressListener)
@@ -67,6 +72,9 @@ export class PlayerVM implements IVM {
         this.player?.release()
     }
 
+    private theme: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
+    private settings: SettingsVM = AppStorageV2.connect<SettingsVM>(SettingsVM, () => new SettingsVM())!
+
     async setSource(mediaFile: MediaFile, autoPlay: boolean = true) {
         this.mediaTitle = mediaFile.title
         this.mediaArtist = mediaFile.artist
@@ -79,6 +87,12 @@ export class PlayerVM implements IVM {
                 this.start()
             }
         })
+        // update theme
+        XLogger.w(TAG, "auto theme= " + this.settings.autoMainTheme)
+        if (this.settings.autoMainTheme) {
+            let pixelmap = await ImageLoader.get(this.context!.getHostContext()!).loadImage(mediaFile.coverUrl)
+            this.theme.updateByPixelmap(pixelmap)
+        }
     }
 
     start() {

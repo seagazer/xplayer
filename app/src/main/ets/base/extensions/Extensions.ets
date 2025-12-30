@@ -25,3 +25,11 @@ export async function Md5(value: string) {
         return undefined
     }
 }
+
+export function stringToHex(hexColor: string): number {
+    let color: string = hexColor.startsWith('#') ? hexColor.substring(1) : hexColor;
+    if (color.length === 6) {
+        color = 'ff' + color;
+    }
+    return parseInt(color, 16);
+}

@@ -1,6 +1,6 @@
 import { duration2Text } from '../../base/extensions/Extensions'
+import { UIConstants } from '../../base/UIConstants'
 import { ImageView } from '../../base/view/ImageView'
-import { DEFAULT_PRIMARY_COLOR, DEFAULT_PRIMARY_COLOR_DARK } from '../tabs/settings/vm/ThemeVM'
 
 /**
  *
@@ -9,8 +9,8 @@ import { DEFAULT_PRIMARY_COLOR, DEFAULT_PRIMARY_COLOR_DARK } from '../tabs/setti
  */
 @ComponentV2
 export struct FloatControllerView {
-    @Param primaryColor: string = DEFAULT_PRIMARY_COLOR
-    @Param primaryColorDark: string = DEFAULT_PRIMARY_COLOR_DARK
+    @Param primaryColor: string = UIConstants.DEFAULT_PRIMARY_COLOR
+    @Param primaryColorDark: string = UIConstants.DEFAULT_PRIMARY_COLOR_DARK
     @Param title: string = ""
     @Param artist: string = ""
     @Param isPlaying: boolean = false

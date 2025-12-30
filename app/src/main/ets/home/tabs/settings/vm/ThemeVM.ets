@@ -1,4 +1,6 @@
-import { IVM } from "../../../../base/IVM"
+import { IVM } from '../../../../base/IVM'
+import { UIConstants } from '../../../../base/UIConstants'
+import { Palette } from '../../../../base/view/Palette'
 
 /**
  *
@@ -7,12 +9,13 @@ import { IVM } from "../../../../base/IVM"
  */
 @ObservedV2
 export class ThemeVM implements IVM {
-    @Trace primaryColor: string = DEFAULT_PRIMARY_COLOR
-    @Trace primaryColorDark: string = DEFAULT_PRIMARY_COLOR_DARK
+    @Trace primaryColor: string = UIConstants.DEFAULT_PRIMARY_COLOR
+    @Trace primaryColorDark: string = UIConstants.DEFAULT_PRIMARY_COLOR_DARK
     @Trace rootPaddingTop: number = 0
     @Trace rootPaddingBottom: number = 0
     @Trace rootPaddingLeft: number = 16
     @Trace rootPaddingRight: number = 16
+    private palette = new Palette()
 
     async onCreate(context: UIContext) {
     }
@@ -22,8 +25,19 @@ export class ThemeVM implements IVM {
     }
 
     reset() {
-        this.primaryColor = DEFAULT_PRIMARY_COLOR
-        this.primaryColorDark = DEFAULT_PRIMARY_COLOR_DARK
+        this.primaryColor = UIConstants.DEFAULT_PRIMARY_COLOR
+        this.primaryColorDark = UIConstants.DEFAULT_PRIMARY_COLOR_DARK
+    }
+
+    updateByPixelmap(pixelmap: PixelMap | undefined) {
+        if (pixelmap !== undefined) {
+            this.palette.setImage(pixelmap).then(() => {
+                const color = this.palette.getThemeColor()
+                this.update(color[0], color[1])
+            })
+        } else {
+            this.reset()
+        }
     }
 
     update(primaryColor: string, primaryColorDark: string) {
@@ -39,8 +53,3 @@ export class ThemeVM implements IVM {
         this.primaryColorDark = primaryColorDark
     }
 }
-
-
-export const DEFAULT_PRIMARY_COLOR = "#ffb8d884"
-
-export const DEFAULT_PRIMARY_COLOR_DARK = "#ff282826"

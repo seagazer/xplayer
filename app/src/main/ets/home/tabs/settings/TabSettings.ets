@@ -1,12 +1,12 @@
 import { FileLibrary } from '../../../base/file/FileLibrary'
 import { MediaLibraryVM } from '../library/vm/MediaLibraryVM'
 import { AppStorageV2, ComponentContent } from '@kit.ArkUI'
-import { Palette } from '../../../base/view/Palette'
-import { PlayerVM } from '../../../player/vm/PlayerVM'
 import { ThemeVM } from './vm/ThemeVM'
 import { SettingsVM } from './vm/SettingsVM'
 import { SettingsButtonItem, SettingsCategory, SettingsSwitchItem, SettingsTextItem } from './view/SettingsItemView'
 import { tabTitleStyle } from '../Style'
+import { ImageLoader } from '../../../base/http/ImageLoader'
+import { PlayerVM } from '../../../player/vm/PlayerVM'
 
 
 const TAG = "[TabSettings]"
@@ -24,7 +24,6 @@ export function TabSettingsView() {
 @ComponentV2
 struct TabSettings {
     private mediaLibrary: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
-    private palette = new Palette()
     private player: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
     private theme: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
     private settings: SettingsVM = AppStorageV2.connect<SettingsVM>(SettingsVM, () => new SettingsVM())!
@@ -52,22 +51,60 @@ struct TabSettings {
                         title: "主题色", button: "取色", onAction: () => {
                         }
                     }).margin({ top: 16 })
-                    SettingsSwitchItem({ title: "动态主题色" })
-                        .margin({ top: 16 })
+
+                    Row() {
+                        Text("动态主题色")
+                            .fontSize(16)
+                            .fontColor(Color.White)
+                        Toggle({ type: ToggleType.Switch, isOn: $$this.settings.autoMainTheme })
+                            .selectedColor(this.theme.primaryColor)
+                            .width(50)
+                            .height(24)
+                            .onChange((isOn)=>{
+                                if (isOn) {
+                                    ImageLoader.get(this.getUIContext().getHostContext()!).loadImage(this.player.coverUrl)
+                                        .then((result) => {
+                                            this.theme.updateByPixelmap(result)
+                                        })
+                                } else {
+                                    this.theme.reset()
+                                }
+                            })
+                    }
+                    .width("100%")
+                    .padding({ left: 16 })
+                    .justifyContent(FlexAlign.SpaceBetween)
+                    .margin({ top: 16 })
+                    // SettingsSwitchItem({
+                    //     title: "动态主题色",
+                    //     theme: this.theme,
+                    //     onAction: (isOn) => {
+                    //         this.settings.autoMainTheme = isOn
+                    //         if (isOn) {
+                    //             ImageLoader.get(this.getUIContext().getHostContext()!).loadImage(this.player.coverUrl)
+                    //                 .then((result) => {
+                    //                     this.theme.updateByPixelmap(result)
+                    //                 })
+                    //         } else {
+                    //             this.theme.reset()
+                    //         }
+                    //     }
+                    // })
+                    //     .margin({ top: 16 })
 
                     // lyric
                     SettingsCategory({ title: "歌词" })
                         .margin({ top: 24 })
-                    SettingsSwitchItem({ title: "左对齐" })
+                    SettingsSwitchItem({ title: "左对齐", theme: this.theme, })
                         .margin({ top: 16 })
-                    SettingsSwitchItem({ title: "自动下载歌词" })
+                    SettingsSwitchItem({ title: "自动下载歌词", theme: this.theme, })
                         .margin({ top: 16 })
                     SettingsButtonItem({
                         title: "字体大小", button: "20", onAction: () => {
 
                         }
                     }).margin({ top: 16 })
-                    SettingsSwitchItem({ title: "动态主题色" })
+                    SettingsSwitchItem({ title: "动态主题色", theme: this.theme, })
                         .margin({ top: 16 })
                     // about
                     SettingsCategory({ title: "关于" })

@@ -30,7 +30,12 @@ export default class EntryAbility extends UIAbility {
             hilog.info(DOMAIN, 'testTag', 'Succeeded in loading the content.');
         });
         try {
-            windowStage.getMainWindowSync().setWindowLayoutFullScreen(true).catch(() => {
+            const win = windowStage.getMainWindowSync()
+            win.setWindowLayoutFullScreen(true).catch(() => {
+            })
+            win.setWindowSystemBarProperties({
+                statusBarContentColor: "#ffffff"
+            }).catch(() => {
             })
         } catch (error) {
         }

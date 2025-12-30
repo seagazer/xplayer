@@ -1,3 +1,5 @@
+import { ThemeVM } from '../vm/ThemeVM'
+
 @ComponentV2
 export struct SettingsCategory {
     @Require @Param title: string
@@ -76,6 +78,8 @@ export struct SettingsButtonItem {
 @ComponentV2
 export struct SettingsSwitchItem {
     @Require @Param title: string
+    @Require @Param theme: ThemeVM
+    @Event onAction: (isOn: boolean) => void
 
     build() {
         Row() {
@@ -83,8 +87,12 @@ export struct SettingsSwitchItem {
                 .fontSize(16)
                 .fontColor(Color.White)
             Toggle({ type: ToggleType.Switch })
+                .selectedColor(this.theme.primaryColor)
                 .width(50)
                 .height(24)
+                .onChange((isOn) => {
+                    this.onAction?.(isOn)
+                })
         }
         .width("100%")
         .padding({ left: 16 })

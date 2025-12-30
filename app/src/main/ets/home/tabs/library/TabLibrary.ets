@@ -3,11 +3,8 @@ import { AppStorageV2 } from '@kit.ArkUI'
 import { duration2Text } from '../../../base/extensions/Extensions'
 import { PlayerVM } from '../../../player/vm/PlayerVM'
 import { ThemeVM } from '../settings/vm/ThemeVM'
-import { Palette } from '../../../base/view/Palette'
 import { tabTitleStyle } from '../Style'
 import { ImageView } from '../../../base/view/ImageView'
-import { ImageLoader } from '../../../base/http/ImageLoader'
-import { SpinKit } from '@pura/spinkit'
 
 /**
  *
@@ -24,7 +21,6 @@ struct TabLibrary {
     private mediaLibrary: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
     private player: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
     private theme: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
-    private palette = new Palette()
 
     build() {
         Column() {
@@ -44,22 +40,11 @@ struct TabLibrary {
                         .each((repeatItem) => {
                             ListItem() {
                                 Row() {
-                                    Stack() {
-                                        if (repeatItem.item.uri === this.player.currentItem?.uri) {
-                                            SpinKit({
-                                                spinType: 2,
-                                                spinColor: this.theme.primaryColor,
-                                                spinSize: 24
-                                            })
-                                        } else {
-                                            Text((repeatItem.index + 1).toString())
-                                                .fontSize(24)
-                                                .fontColor("#ccffffff")
-                                        }
-                                    }
-                                    .width(56)
-                                    .height(56)
-                                    .align(Alignment.Center)
+                                    Text((repeatItem.index + 1).toString())
+                                        .fontSize(24)
+                                        .fontColor("#ccffffff")
+                                        .fontWeight(FontWeight.Bold)
+                                        .margin({ right: 16 })
 
                                     ImageView({ url: repeatItem.item.coverUrl, corner: 4 })
                                         .width(40)
@@ -86,23 +71,15 @@ struct TabLibrary {
                                 }
                                 .width("100%")
                                 .height("100%")
-                                .padding({ left: 8, right: 16 })
                             }
                             .width("100%")
                             .height(56)
+                            .padding({ left: 8, right: 16 })
                             .clickEffect({ level: ClickEffectLevel.LIGHT, scale: 0.95 })
+                            .border({ radius: 4 })
+                            .backgroundColor(repeatItem.item.uri === this.player.currentItem?.uri ? "#33ffffff" : Color.Transparent)
                             .onClick(async () => {
                                 this.player.setSource(repeatItem.item)
-                                // update theme
-                                let pixelmap = await ImageLoader.get(this.getUIContext().getHostContext()!).loadImage(repeatItem.item.coverUrl)
-                                if (pixelmap !== undefined) {
-                                    this.palette.setImage(pixelmap).then(() => {
-                                        const color = this.palette.getThemeColor()
-                                        this.theme?.update(color[0], color[1])
-                                    })
-                                } else {
-                                    this.theme?.reset()
-                                }
                             })
                         }).virtualScroll({ totalCount: this.mediaLibrary.mediaList.length })
                         .key((item) => {

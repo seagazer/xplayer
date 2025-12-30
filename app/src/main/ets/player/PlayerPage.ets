@@ -1,11 +1,10 @@
 import { ThemeVM } from '../home/tabs/settings/vm/ThemeVM'
 import { AppStorageV2 } from '@kit.ArkUI'
-import { duration2Text } from '../base/extensions/Extensions'
+import { duration2Text, stringToHex } from '../base/extensions/Extensions'
 import { CcLyricController, CcLyricView } from '@seagazer/cclyric'
 import { MockData, StringParser } from '../mock/MockData'
 import { XLogger } from '../base/extensions/XLogger'
 import { PlayerVM } from './vm/PlayerVM'
-import { Palette } from '../base/view/Palette'
 import { MediaLibraryVM } from '../home/tabs/library/vm/MediaLibraryVM'
 import { ImageView } from '../base/view/ImageView'
 
@@ -16,7 +15,7 @@ const TAG = "[PlayerPage]"
  * Author: Seagazer
  * Date: 2025/12/16
  */
-@ComponentV2
+@ComponentV2({ freezeWhenInactive: true })
 export struct PlayerPage {
     private theme: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
     @Local player: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
@@ -35,8 +34,8 @@ export struct PlayerPage {
             .setLineSpace(12)
             .setTextSize(22)
             .setHighlightScale(1.1)
-            .setTextColor(Palette.stringToHex(this.theme!.primaryColor))
-            .setTextHighlightColor(Palette.stringToHex(this.theme!.primaryColorDark))
+            .setTextColor(stringToHex(this.theme!.primaryColor))
+            .setTextHighlightColor(stringToHex(this.theme!.primaryColorDark))
             .setFadeColor(Color.Transparent)
             .setEmptyHint("未找到歌词")
             .setLrcAnimDuration(150)
