@@ -41,6 +41,6 @@ export class ThemeVM implements IVM {
 }
 
 
-export const DEFAULT_PRIMARY_COLOR = "#ff92c6e5"
+export const DEFAULT_PRIMARY_COLOR = "#ffb8d884"
 
-export const DEFAULT_PRIMARY_COLOR_DARK = "#ff276f84"
+export const DEFAULT_PRIMARY_COLOR_DARK = "#ff282826"

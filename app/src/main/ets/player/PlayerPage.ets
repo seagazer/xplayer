@@ -7,6 +7,7 @@ import { XLogger } from '../base/extensions/XLogger'
 import { PlayerVM } from './vm/PlayerVM'
 import { Palette } from '../base/view/Palette'
 import { MediaLibraryVM } from '../home/tabs/library/vm/MediaLibraryVM'
+import { ImageView } from '../base/view/ImageView'
 
 const TAG = "[PlayerPage]"
 
@@ -38,8 +39,9 @@ export struct PlayerPage {
             .setTextHighlightColor(Palette.stringToHex(this.theme!.primaryColorDark))
             .setFadeColor(Color.Transparent)
             .setEmptyHint("未找到歌词")
+            .setLrcAnimDuration(150)
         // todo test lyric data
-        const lyric = new StringParser().parse(MockData.krc6)
+        const lyric = new StringParser().parse(MockData.krc7)
         XLogger.w(TAG, JSON.stringify(lyric))
         this.lrcController.setLyric(lyric)
     }
@@ -62,18 +64,9 @@ export struct PlayerPage {
 
                 Row() {
                     Column() {
-                        Image(this.player.coverImage)
-                            .objectFit(ImageFit.Cover)
+                        ImageView({ url: this.player.coverUrl, corner: 16 })
                             .width(240)
                             .height(240)
-                            .displayPriority(2)
-                            .border({ radius: 8 })
-                            .shadow({
-                                radius: 16,
-                                color: this.theme.primaryColorDark,
-                                offsetX: 4,
-                                offsetY: 4
-                            })
                         Text(this.player.mediaTitle)
                             .fontColor(this.theme?.primaryColor)
                             .fontSize(24)
@@ -144,7 +137,7 @@ export struct PlayerPage {
                             this.player.onSeekChanged(value, mode)
                         })
 
-                    // TODO controller bar
+                    // controller bar
                     Row() {
                         Text() {
                             Span(duration2Text(this.player.playerProgress))
@@ -155,8 +148,6 @@ export struct PlayerPage {
                         .fontColor(this.theme?.primaryColor)
                         .animation({ duration: 1000 })
                         .textAlign(TextAlign.End)
-                        .displayPriority(1)
-
 
                         Blank()
 
@@ -242,7 +233,7 @@ export struct PlayerPage {
         }
         .width('100%')
         .height('100%')
-        .backgroundColor("#80000000")
+        .backgroundColor(Color.Black)
         .title("detail")
         .hideTitleBar(true)
         .onReady((context: NavDestinationContext) => {

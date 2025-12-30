@@ -17,7 +17,7 @@ import { TabConfig, TabItem } from './TabConfig'
 export struct HomePage {
     private theme: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
     private player: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
-    private playlist: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
+    private mediaLibrary: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
     private navigation = new NavPathStack()
     @Local gradientRadius: number = 0
     @Local selectedTabIndex: number = 0
@@ -28,13 +28,14 @@ export struct HomePage {
             Stack() {
                 // todo tab container
                 Row() {
-                    Column() {
+                    Column({ space: 8 }) {
                         ForEach(TabConfig, (item: TabItem) => {
                             TabItemView({
                                 index: item.index,
                                 icon: item.icon,
                                 title: item.title,
-                                isSelected: this.selectedTabIndex === item.index
+                                isSelected: this.selectedTabIndex === item.index,
+                                theme: this.theme
                             }).onClick(() => {
                                 this.selectedTabIndex = item.index
                                 this.tabsController.changeIndex(item.index)
@@ -46,7 +47,12 @@ export struct HomePage {
                     .backgroundColor("#1affffff")
                     .justifyContent(FlexAlign.Start)
                     .alignItems(HorizontalAlign.Start)
-                    .padding({ top: this.theme.rootPaddingTop, bottom: this.theme.rootPaddingBottom })
+                    .padding({
+                        top: this.theme.rootPaddingTop,
+                        bottom: this.theme.rootPaddingBottom,
+                        left: 16,
+                        right: 16
+                    })
 
                     Tabs({ controller: this.tabsController }) {
                         ForEach(TabConfig, (item: TabItem) => {
@@ -63,44 +69,45 @@ export struct HomePage {
                 .width("100%")
                 .height("100%")
 
-                // if (this.playlist.playingItem !== undefined) {
-                    FloatControllerView({
-                        primaryColor: this.theme.primaryColor,
-                        primaryColorDark: this.theme.primaryColorDark,
-                        title: this.player.mediaTitle,
-                        artist: this.player.mediaArtist,
-                        isPlaying: this.player.isPlaying,
-                        progress: this.player.userProgress,
-                        duration: this.player.duration,
-                        cover: this.player.coverImage,
-                        onPlayButtonClick: () => {
-                            if (this.player.isPlaying) {
-                                this.player.pause()
-                            } else {
-                                this.player.start()
-                            }
-                        },
-                        onContainerClick: () => {
-                            this.getUIContext().animateTo({ duration: 300 }, () => {
-                                this.navigation.pushPath({ name: RouterConstants.PLAYER }, false)
-                            })
+                FloatControllerView({
+                    primaryColor: this.theme.primaryColor,
+                    primaryColorDark: this.theme.primaryColorDark,
+                    title: this.player.mediaTitle,
+                    artist: this.player.mediaArtist,
+                    isPlaying: this.player.isPlaying,
+                    progress: this.player.userProgress,
+                    duration: this.player.duration,
+                    cover: this.player.coverUrl,
+                    onPlayButtonClick: () => {
+                        if (this.player.isPlaying) {
+                            this.player.pause()
+                        } else {
+                            this.player.start()
                         }
-                    }).width("80%")
-                        .height(80)
-                        .geometryTransition("controller", { follow: true })
-                        .margin({ bottom: 24 })
-                // }
+                    },
+                    onContainerClick: () => {
+                        this.getUIContext().animateTo({ duration: 300 }, () => {
+                            this.navigation.pushPath({ name: RouterConstants.PLAYER }, false)
+                        })
+                    }
+                })
+                    .width("80%")
+                    .height(80)
+                    .geometryTransition("controller", { follow: true })
+                    .margin({ bottom: 24 })
+                    .translate({ y: this.player.currentItem !== undefined ? 0 : 160 })
 
             }.align(Alignment.Bottom)
         }
         .height('100%')
         .width('100%')
-        .radialGradient({
-            center: ["50%", "50%"],
-            radius: this.gradientRadius === 0 ? "100%" : this.gradientRadius,
-            colors: [[this.theme!.primaryColor, 0], ["#bf000000", 1]]
-        })
-        .animation({ duration: 1000 })
+        // .radialGradient({
+        //     center: ["50%", "50%"],
+        //     radius: this.gradientRadius === 0 ? "100%" : this.gradientRadius,
+        //     colors: [[this.theme!.primaryColor, 0], ["#bf000000", 1]]
+        // })
+        // .animation({ duration: 1000 })
+        .backgroundColor("#ff1f201e")
         .onSizeChange((_, size) => {
             let w = size.width as number
             let h = size.height as number

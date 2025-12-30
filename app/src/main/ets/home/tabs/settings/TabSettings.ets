@@ -23,7 +23,7 @@ export function TabSettingsView() {
 
 @ComponentV2
 struct TabSettings {
-    private playlist: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
+    private mediaLibrary: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
     private palette = new Palette()
     private player: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
     private theme: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
@@ -99,8 +99,13 @@ struct TabSettings {
         })
     }
 
-    private test() {
-        new FileLibrary(this.getUIContext()).select()
+    private async test() {
+        const result = await new FileLibrary(this.getUIContext()).select()
+        if (result !== undefined) {
+            this.mediaLibrary.mediaList.push(...result)
+            this.mediaLibrary.isEmpty = this.mediaLibrary.mediaList.length > 0
+            await this.mediaLibrary.add(result)
+        }
     }
 
     private openActiveDialog() {
@@ -110,23 +115,32 @@ struct TabSettings {
             }
         })
         const content = new ComponentContent(this.getUIContext(), wrapBuilder(ActiveDialog), param)
-        this.getUIContext().getPromptAction().openCustomDialog<ActiveParam>(content)
+        this.getUIContext().getPromptAction().openCustomDialog<ActiveParam>(content).catch(() => {
+            // TODO: Implement error handling.
+        })
     }
 }
 
 
 @Builder
 function ActiveDialog(param: ActiveParam) {
-    Column() {
+    Column({ space: 16 }) {
         TextInput()
+            .type(InputType.Number)
+            .border({ width: 1 })
             .onChange((input) => {
                 param.input = input
             })
-        Button("ok")
+        Button("确认")
             .onClick(() => {
                 param.onConfirm(param.input)
             })
     }
+    .width(300)
+    .height(200)
+    .backgroundColor(Color.White)
+    .border({ radius: 16 })
+    .justifyContent(FlexAlign.Center)
 }
 
 class ActiveParam {

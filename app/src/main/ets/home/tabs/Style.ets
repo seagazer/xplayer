@@ -7,6 +7,7 @@ export class TabTitleStyle implements AttributeModifier<TextAttribute> {
     applyNormalAttribute(instance: TextAttribute): void {
         instance.fontSize(36)
             .fontWeight(FontWeight.Bold)
+            .fontColor("#ccffffff")
     }
 }
 

@@ -1,4 +1,5 @@
 import { duration2Text } from '../../base/extensions/Extensions'
+import { ImageView } from '../../base/view/ImageView'
 import { DEFAULT_PRIMARY_COLOR, DEFAULT_PRIMARY_COLOR_DARK } from '../tabs/settings/vm/ThemeVM'
 
 /**
@@ -15,7 +16,7 @@ export struct FloatControllerView {
     @Param isPlaying: boolean = false
     @Param progress: number = 0
     @Param duration: number = 0
-    @Param cover: PixelMap | Resource = $r("app.media.cover")
+    @Param cover?: string = undefined
     @Event onPlayButtonClick: () => void
     @Event onContainerClick: () => void
     @Local fadeAnimFlag: boolean = false
@@ -36,19 +37,15 @@ export struct FloatControllerView {
                 .backgroundColor("#33ffffff")
             Row() {
                 if (this.fadeAnimFlag) {
-                    Image(this.cover)
-                        .objectFit(ImageFit.Cover)
+                    ImageView({ url: this.cover, corner: 4 })
                         .height("100%")
                         .aspectRatio(1)
-                        .border({ radius: 4 })
                         .geometryTransition("cover")
                         .transition(TransitionEffect.OPACITY)
                 } else {
-                    Image(this.cover)
-                        .objectFit(ImageFit.Cover)
+                    ImageView({ url: this.cover, corner: 4 })
                         .height("100%")
                         .aspectRatio(1)
-                        .border({ radius: 4 })
                         .geometryTransition("cover")
                         .transition(TransitionEffect.OPACITY)
                 }

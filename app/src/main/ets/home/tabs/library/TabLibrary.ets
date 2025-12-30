@@ -5,6 +5,9 @@ import { PlayerVM } from '../../../player/vm/PlayerVM'
 import { ThemeVM } from '../settings/vm/ThemeVM'
 import { Palette } from '../../../base/view/Palette'
 import { tabTitleStyle } from '../Style'
+import { ImageView } from '../../../base/view/ImageView'
+import { ImageLoader } from '../../../base/http/ImageLoader'
+import { SpinKit } from '@pura/spinkit'
 
 /**
  *
@@ -18,7 +21,7 @@ export function TabLibraryView() {
 
 @ComponentV2
 struct TabLibrary {
-    private playlist: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
+    private mediaLibrary: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
     private player: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
     private theme: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
     private palette = new Palette()
@@ -29,66 +32,83 @@ struct TabLibrary {
                 .attributeModifier(tabTitleStyle)
 
             Row() {
-                Text("共" + this.playlist.playlist.length + "首音乐")
+                Text("共" + this.mediaLibrary.mediaList.length + "首音乐")
                     .fontSize(20)
+                    .fontColor("#ccffffff")
             }
-            .margin({ top: 24 })
+            .margin({ top: 24, bottom: 16 })
 
             Column() {
                 List({ space: 12 }) {
-                    Repeat(this.playlist.playlist)
+                    Repeat(this.mediaLibrary.mediaList)
                         .each((repeatItem) => {
                             ListItem() {
                                 Row() {
-                                    Image(repeatItem.item.cover)
+                                    Stack() {
+                                        if (repeatItem.item.uri === this.player.currentItem?.uri) {
+                                            SpinKit({
+                                                spinType: 2,
+                                                spinColor: this.theme.primaryColor,
+                                                spinSize: 24
+                                            })
+                                        } else {
+                                            Text((repeatItem.index + 1).toString())
+                                                .fontSize(24)
+                                                .fontColor("#ccffffff")
+                                        }
+                                    }
+                                    .width(56)
+                                    .height(56)
+                                    .align(Alignment.Center)
+
+                                    ImageView({ url: repeatItem.item.coverUrl, corner: 4 })
                                         .width(40)
                                         .height(40)
-                                        .objectFit(ImageFit.Cover)
-                                        .border({ radius: 2 })
                                     Column() {
                                         Text(repeatItem.item.title)
                                             .fontSize(18)
+                                            .fontColor("#ccffffff")
                                         Text(repeatItem.item.artist)
                                             .fontSize(14)
                                             .margin({ top: 4 })
+                                            .fontColor("#99ffffff")
                                     }
                                     .height("100%")
                                     .margin({ left: 16 })
                                     .alignItems(HorizontalAlign.Start)
+                                    .justifyContent(FlexAlign.Center)
 
                                     Blank()
+
                                     Text(duration2Text(repeatItem.item.duration))
                                         .fontSize(18)
+                                        .fontColor("#ccffffff")
                                 }
                                 .width("100%")
                                 .height("100%")
-                                .padding({ top: 2, bottom: 2 })
+                                .padding({ left: 8, right: 16 })
                             }
                             .width("100%")
                             .height(56)
                             .clickEffect({ level: ClickEffectLevel.LIGHT, scale: 0.95 })
-                            .onClick(() => {
+                            .onClick(async () => {
                                 this.player.setSource(repeatItem.item)
-                                this.getUIContext().animateTo({
-                                    duration: 1000
-                                }, () => {
-                                    this.playlist.playingItem = repeatItem.item
-                                    this.playlist.playingIndex = repeatItem.index
-                                })
                                 // update theme
-                                let pixelmap = repeatItem.item.cover
+                                let pixelmap = await ImageLoader.get(this.getUIContext().getHostContext()!).loadImage(repeatItem.item.coverUrl)
                                 if (pixelmap !== undefined) {
-                                    this.player.coverImage = pixelmap
                                     this.palette.setImage(pixelmap).then(() => {
                                         const color = this.palette.getThemeColor()
                                         this.theme?.update(color[0], color[1])
                                     })
                                 } else {
-                                    this.player.coverImage = $r("app.media.cover")
                                     this.theme?.reset()
                                 }
                             })
-                        }).virtualScroll({ totalCount: this.playlist.playlist.length })
+                        }).virtualScroll({ totalCount: this.mediaLibrary.mediaList.length })
+                        .key((item) => {
+                            return item.uri
+                        })
+                    ListItem().height(120)
                 }
                 .width("100%")
                 .height("100%")

@@ -6,6 +6,8 @@ import { AppStorageV2, window } from '@kit.ArkUI'
 import { XLogger } from '../base/extensions/XLogger'
 import { common } from '@kit.AbilityKit'
 import { RouterConstants } from '../base/Router'
+import { DbHelper } from '../base/db/DbHelper'
+import { Md5 } from '../base/extensions/Extensions'
 
 const TAG = "[Splash]"
 
@@ -41,7 +43,6 @@ export struct SplashPage {
                             // }, () => {
                             //     this.alpha[index] = 1
                             // })
-                            this.initApp()
                         })
                 })
             }
@@ -49,6 +50,9 @@ export struct SplashPage {
             .alignItems(VerticalAlign.Center)
             .width("100%")
             .height("100%")
+            .onAppear(() => {
+                this.initApp()
+            })
         }
         .width("100%")
         .height("100%")
@@ -61,14 +65,14 @@ export struct SplashPage {
 
     private async initApp() {
         try {
-            const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext
-            const win = ctx.windowStage.getMainWindowSync()
+            const context = this.getUIContext().getHostContext() as common.UIAbilityContext
+            await DbHelper.getInstance().createDb(context, "listen")
+            const win = context.windowStage.getMainWindowSync()
             const area = win.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM)
             const statusHeight = area.topRect.height
             const navigationHeight = area.bottomRect.height
             this.theme.rootPaddingTop = this.getUIContext().px2vp(statusHeight) + 16
             this.theme.rootPaddingBottom = this.getUIContext().px2vp(navigationHeight) + 16
-            XLogger.w(TAG, "----" + statusHeight + ", " + navigationHeight)
             await this.theme.onCreate(this.getUIContext())
             await this.player.onCreate(this.getUIContext())
             await this.settings.onCreate(this.getUIContext())

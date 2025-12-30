@@ -6,12 +6,12 @@ export struct SettingsCategory {
         Column() {
             Text(this.title)
                 .fontSize(24)
-
+                .fontColor("#ccffffff")
             Line()
                 .width("100%")
                 .height(1)
                 .margin({ top: 8 })
-                .backgroundColor("#80000000")
+                .backgroundColor("#80ffffff")
         }
         .width("100%")
         .alignItems(HorizontalAlign.Start)
@@ -27,9 +27,10 @@ export struct SettingsTextItem {
         Row() {
             Text(this.title)
                 .fontSize(18)
-
+                .fontColor(Color.White)
             Text(this.value)
                 .fontSize(18)
+                .fontColor(Color.White)
         }
         .width("100%")
         .padding({ left: 16 })
@@ -47,9 +48,10 @@ export struct SettingsButtonItem {
         Row() {
             Text(this.title)
                 .fontSize(18)
-
+                .fontColor(Color.White)
             Text(this.button)
                 .fontSize(18)
+                .fontColor(Color.White)
                 .textAlign(TextAlign.Center)
                 .padding({
                     left: 16,
@@ -79,7 +81,7 @@ export struct SettingsSwitchItem {
         Row() {
             Text(this.title)
                 .fontSize(16)
-
+                .fontColor(Color.White)
             Toggle({ type: ToggleType.Switch })
                 .width(50)
                 .height(24)
