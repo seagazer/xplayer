@@ -51,8 +51,12 @@ export class FileLibrary {
             const filePicker = new picker.DocumentViewPicker()
             const result = await filePicker.select()
             XLogger.d(TAG, "select result= " + JSON.stringify(result))
-            const list = await this.parseResult(result)
-            return list
+            if (result.length > 0) {
+                const list = await this.parseResult(result)
+                return list
+            } else {
+                return undefined
+            }
         } catch (e) {
             XLogger.e(TAG, "select file error= " + JSON.stringify(e))
             return undefined
