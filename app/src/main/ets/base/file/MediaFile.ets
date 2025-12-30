@@ -10,7 +10,6 @@ export interface MediaFile {
     uri: string,
     duration: number,
     coverUrl: string | undefined,
-    cover: PixelMap | undefined
 }
 
 
