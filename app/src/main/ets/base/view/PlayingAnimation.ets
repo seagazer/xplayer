@@ -5,8 +5,8 @@
  */
 @ComponentV2
 export struct PlayingAnimation {
-    @Require @Param spinSize: number;
-    @Require @Param spinColor: ResourceColor;
+    @Require @Param viewSize: number;
+    @Require @Param themeColor: ResourceColor;
     @Local scale1: number = 0.4;
     @Local scale2: number = 0.4;
     @Local scale3: number = 0.4;
@@ -35,8 +35,8 @@ export struct PlayingAnimation {
                 .chunkStyle()
                 .scale({ y: this.scale5, centerY: "100%" })
         }
-        .width(this.spinSize)
-        .height(this.spinSize)
+        .width(this.viewSize)
+        .height(this.viewSize)
         .onAppear(() => {
             let keyframes1: Array<KeyframeState> = [
                 {
@@ -161,7 +161,7 @@ export struct PlayingAnimation {
         .height('100%')
         .width('14%')
         .margin({ left: '3%', right: '3%' })
-        .backgroundColor(this.spinColor)
+        .backgroundColor(this.themeColor)
         .shadow(ShadowStyle.OUTER_DEFAULT_XS)
     }
 }

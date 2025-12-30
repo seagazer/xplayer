@@ -44,7 +44,7 @@ struct TabLibrary {
                                         .fontSize(24)
                                         .fontColor("#ccffffff")
                                         .fontWeight(FontWeight.Bold)
-                                        .margin({ right: 16 })
+                                        .padding({ left: 8, right: 16 })
 
                                     ImageView({ url: repeatItem.item.coverUrl, corner: 4 })
                                         .width(40)
@@ -72,9 +72,9 @@ struct TabLibrary {
                                 .width("100%")
                                 .height("100%")
                             }
+                            .padding({ left: 8, right: 16 })
                             .width("100%")
                             .height(56)
-                            .padding({ left: 8, right: 16 })
                             .clickEffect({ level: ClickEffectLevel.LIGHT, scale: 0.95 })
                             .border({ radius: 4 })
                             .backgroundColor(repeatItem.item.uri === this.player.currentItem?.uri ? "#33ffffff" : Color.Transparent)

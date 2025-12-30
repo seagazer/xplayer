@@ -33,11 +33,11 @@ export struct HomePage {
                                 .fontSize(36)
                                 .fontWeight(FontWeight.Bold)
                                 .fontColor(UIConstants.DEFAULT_PRIMARY_COLOR)
+
                             PlayingAnimation({
-                                spinColor: this.theme.primaryColor,
-                                spinSize: 24
-                            })
-                                .margin({ left: 16 })
+                                themeColor: this.theme.primaryColor,
+                                viewSize: 24
+                            }).margin({ left: 16 })
                                 .visibility(this.player.isPlaying ? Visibility.Visible : Visibility.Hidden)
                                 .animation({ duration: 500 })
                         }
@@ -113,6 +113,7 @@ export struct HomePage {
                     .geometryTransition("controller", { follow: true })
                     .margin({ bottom: 24 })
                     .translate({ y: this.player.currentItem !== undefined ? 0 : 160 })
+                    .animation({ duration: 500, curve: Curve.FastOutSlowIn })
 
             }.align(Alignment.Bottom)
         }
