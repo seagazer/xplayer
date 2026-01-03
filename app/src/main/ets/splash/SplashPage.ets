@@ -8,6 +8,7 @@ import { common } from '@kit.AbilityKit'
 import { RouterConstants } from '../base/Router'
 import { DbHelper } from '../base/db/DbHelper'
 import { UIConstants } from '../base/UIConstants'
+import { AlbumVM } from '../home/tabs/album/AlbumVM'
 
 const TAG = "[Splash]"
 
@@ -21,10 +22,11 @@ export struct SplashPage {
     private navPathStack = new NavPathStack()
     private appName: string[] = ["L", "i", "s", "t", "e", "n"]
     @Local alpha: number[] = [0, 0, 0, 0, 0, 0]
-    private theme: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
-    private player: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
-    private settings: SettingsVM = AppStorageV2.connect<SettingsVM>(SettingsVM, () => new SettingsVM())!
-    private playlist: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
+    private themeVM: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
+    private playerVM: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
+    private settingsVM: SettingsVM = AppStorageV2.connect<SettingsVM>(SettingsVM, () => new SettingsVM())!
+    private mediaLibraryVM: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
+    private albumVM: AlbumVM = AppStorageV2.connect<AlbumVM>(AlbumVM, () => new AlbumVM())!
 
     build() {
         NavDestination() {
@@ -74,12 +76,13 @@ export struct SplashPage {
             const area = win.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM)
             const statusHeight = area.topRect.height
             const navigationHeight = area.bottomRect.height
-            this.theme.rootPaddingTop = this.getUIContext().px2vp(statusHeight) + 16
-            this.theme.rootPaddingBottom = this.getUIContext().px2vp(navigationHeight) + 16
-            await this.theme.onCreate(this.getUIContext())
-            await this.player.onCreate(this.getUIContext())
-            await this.settings.onCreate(this.getUIContext())
-            await this.playlist.onCreate(this.getUIContext())
+            this.themeVM.rootPaddingTop = this.getUIContext().px2vp(statusHeight) + 16
+            this.themeVM.rootPaddingBottom = this.getUIContext().px2vp(navigationHeight) + 16
+            await this.themeVM.onCreate(this.getUIContext())
+            await this.playerVM.onCreate(this.getUIContext())
+            await this.mediaLibraryVM.onCreate(this.getUIContext())
+            await this.albumVM.onCreate(this.getUIContext())
+            await this.settingsVM.onCreate(this.getUIContext())
             this.onAppReady()
         } catch (e) {
             XLogger.e(TAG, "init app error= " + JSON.stringify(e))

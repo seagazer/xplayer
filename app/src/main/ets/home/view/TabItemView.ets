@@ -26,7 +26,7 @@ export struct TabItemView {
         }
         .width("100%")
         .height(48)
-        .padding({ left: 8, right: 8 })
+        .padding({ left: 16, right: 16 })
         .border({ radius: 8 })
         .backgroundColor(this.isSelected ? this.theme.primaryColorDark : Color.Transparent)
         .hoverEffect(HoverEffect.Highlight)

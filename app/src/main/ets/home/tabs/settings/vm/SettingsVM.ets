@@ -18,7 +18,7 @@ export class SettingsVM implements IVM {
     @Trace lyricTextSize: number = 24
     // version
     @Trace appVersion: string = "1.0.0"
-    @Trace appActive: boolean = true
+    @Trace appActive: boolean = false
 
     async onCreate(context: UIContext) {
     }

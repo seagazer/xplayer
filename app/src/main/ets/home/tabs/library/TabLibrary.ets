@@ -42,7 +42,7 @@ struct TabLibrary {
                                 Row() {
                                     Text((repeatItem.index + 1).toString())
                                         .fontSize(24)
-                                        .fontColor("#ccffffff")
+                                        .fontColor(repeatItem.item.uri === this.player.currentItem?.uri ? this.theme.primaryColor : "#ccffffff")
                                         .fontWeight(FontWeight.Bold)
                                         .padding({ left: 8, right: 16 })
 
@@ -52,11 +52,11 @@ struct TabLibrary {
                                     Column() {
                                         Text(repeatItem.item.title)
                                             .fontSize(18)
-                                            .fontColor("#ccffffff")
+                                            .fontColor(repeatItem.item.uri === this.player.currentItem?.uri ? this.theme.primaryColor : "#ccffffff")
                                         Text(repeatItem.item.artist)
                                             .fontSize(14)
                                             .margin({ top: 4 })
-                                            .fontColor("#99ffffff")
+                                            .fontColor(repeatItem.item.uri === this.player.currentItem?.uri ? this.theme.primaryColor : "#99ffffff")
                                     }
                                     .height("100%")
                                     .margin({ left: 16 })
@@ -67,7 +67,7 @@ struct TabLibrary {
 
                                     Text(duration2Text(repeatItem.item.duration))
                                         .fontSize(18)
-                                        .fontColor("#ccffffff")
+                                        .fontColor(repeatItem.item.uri === this.player.currentItem?.uri ? this.theme.primaryColor : "#ccffffff")
                                 }
                                 .width("100%")
                                 .height("100%")

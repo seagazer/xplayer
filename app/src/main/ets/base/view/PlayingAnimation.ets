@@ -149,19 +149,18 @@ export struct PlayingAnimation {
                 }
             ];
             this.getUIContext().keyframeAnimateTo({ iterations: -1, delay: 0 }, keyframes1);
-            this.getUIContext().keyframeAnimateTo({ iterations: -1, delay: -1100 }, keyframes2);
-            this.getUIContext().keyframeAnimateTo({ iterations: -1, delay: -1000 }, keyframes3);
-            this.getUIContext().keyframeAnimateTo({ iterations: -1, delay: -900 }, keyframes4);
-            this.getUIContext().keyframeAnimateTo({ iterations: -1, delay: -800 }, keyframes5);
+            this.getUIContext().keyframeAnimateTo({ iterations: -1, delay: 100 }, keyframes2);
+            this.getUIContext().keyframeAnimateTo({ iterations: -1, delay: 200 }, keyframes3);
+            this.getUIContext().keyframeAnimateTo({ iterations: -1, delay: 300 }, keyframes4);
+            this.getUIContext().keyframeAnimateTo({ iterations: -1, delay: 400 }, keyframes5);
         })
     }
 
     @Styles
     chunkStyle(){
         .height('100%')
-        .width('14%')
-        .margin({ left: '3%', right: '3%' })
+        .width('10%')
+        .margin({ left: '5%', right: '5%' })
         .backgroundColor(this.themeColor)
-        .shadow(ShadowStyle.OUTER_DEFAULT_XS)
     }
 }

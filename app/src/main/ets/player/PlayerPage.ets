@@ -38,7 +38,7 @@ export struct PlayerPage {
             .setTextHighlightColor(stringToHex(this.theme!.primaryColorDark))
             .setFadeColor(Color.Transparent)
             .setEmptyHint("未找到歌词")
-            .setLrcAnimDuration(150)
+            .setLrcAnimDuration(100)
         // todo test lyric data
         const lyric = new StringParser().parse(MockData.krc7)
         XLogger.w(TAG, JSON.stringify(lyric))
@@ -48,18 +48,22 @@ export struct PlayerPage {
     build() {
         NavDestination() {
             Column() {
-                SymbolGlyph($r("sys.symbol.chevron_left"))
-                    .fontColor([this.theme?.primaryColor])
-                    .fontSize(32)
-                    .clickEffect({ level: ClickEffectLevel.HEAVY, scale: 0.8 })
-                    .hoverEffect(HoverEffect.Highlight)
-                    .margin({ left: 16 })
-                    .opacity(0.5)
-                    .transition(TransitionEffect.OPACITY)
-                    .animation({ duration: 500 })
-                    .onClick(() => {
-                        this.back()
-                    })
+                Stack() {
+                    SymbolGlyph($r("sys.symbol.chevron_left"))
+                        .fontColor([this.theme?.primaryColor])
+                        .fontSize(32)
+                }
+                .clickEffect({ level: ClickEffectLevel.HEAVY, scale: 0.8 })
+                .hoverEffect(HoverEffect.Highlight)
+                .width(40)
+                .height(40)
+                .border({ radius: 20 })
+                .backgroundColor("#33ffffff")
+                .margin({ left: 16 })
+                .onClick(() => {
+                    this.back()
+                })
+
 
                 Row() {
                     Column() {
@@ -215,6 +219,7 @@ export struct PlayerPage {
                 }
                 .width("100%")
                 .geometryTransition("controller")
+
                 // .transition(TransitionEffect.OPACITY)
             }
             .height('100%')

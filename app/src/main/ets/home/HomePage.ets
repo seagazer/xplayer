@@ -15,7 +15,7 @@ import { PlayingAnimation } from '../base/view/PlayingAnimation'
  */
 @ComponentV2({ freezeWhenInactive: true })
 export struct HomePage {
-    private theme: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
+    @Local theme: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
     private player: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
     private navigation = new NavPathStack()
     @Local gradientRadius: number = 0
@@ -25,7 +25,6 @@ export struct HomePage {
     build() {
         NavDestination() {
             Stack() {
-                // todo tab container
                 Row() {
                     Column({ space: 8 }) {
                         Row() {
@@ -33,13 +32,17 @@ export struct HomePage {
                                 .fontSize(36)
                                 .fontWeight(FontWeight.Bold)
                                 .fontColor(UIConstants.DEFAULT_PRIMARY_COLOR)
-
-                            PlayingAnimation({
-                                themeColor: this.theme.primaryColor,
-                                viewSize: 24
-                            }).margin({ left: 16 })
-                                .visibility(this.player.isPlaying ? Visibility.Visible : Visibility.Hidden)
-                                .animation({ duration: 500 })
+                            Stack() {
+                                if (this.player.isPlaying) {
+                                    PlayingAnimation({
+                                        themeColor: this.theme.primaryColor,
+                                        viewSize: 24
+                                    }).transition(TransitionEffect.OPACITY)
+                                }
+                            }
+                            .width(24)
+                            .height(24)
+                            .margin({ left: 16 })
                         }
                         .width("100%")
                         .margin({ bottom: 16 })
@@ -119,12 +122,6 @@ export struct HomePage {
         }
         .height('100%')
         .width('100%')
-        // .radialGradient({
-        //     center: ["50%", "50%"],
-        //     radius: this.gradientRadius === 0 ? "100%" : this.gradientRadius,
-        //     colors: [[this.theme!.primaryColor, 0], ["#bf000000", 1]]
-        // })
-        // .animation({ duration: 1000 })
         .backgroundColor("#ff1f201e")
         .onSizeChange((_, size) => {
             let w = size.width as number

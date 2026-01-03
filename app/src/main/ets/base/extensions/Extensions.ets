@@ -33,3 +33,17 @@ export function stringToHex(hexColor: string): number {
     }
     return parseInt(color, 16);
 }
+
+export function animate(context: UIContext, action: () => void, duration: number, async: boolean) {
+    if (async) {
+        setTimeout(() => {
+            context.animateTo({ duration: duration }, () => {
+                action()
+            })
+        }, 0)
+    } else {
+        context.animateTo({ duration: duration }, () => {
+            action()
+        })
+    }
+}

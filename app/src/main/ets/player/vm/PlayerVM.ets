@@ -41,14 +41,15 @@ export class PlayerVM implements IVM {
         this.userProgress = position
     }
     private stateChangedListener = (state: PlayerState) => {
-        this.isPlaying = this.player!.isPlaying()
+        this.context?.animateTo({ duration: 500 }, () => {
+            this.isPlaying = this.player!.isPlaying()
+        })
     }
     private seekChangedListener = (position: number) => {
         this.isSeeking = false
         this.userProgress = position
         this.playerProgress = position
     }
-
     async onCreate(context: UIContext) {
         this.context = context
         this.player = new CcPlayer(context.getHostContext()!)

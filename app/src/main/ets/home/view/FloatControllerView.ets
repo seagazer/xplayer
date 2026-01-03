@@ -20,11 +20,11 @@ export struct FloatControllerView {
     @Event onPlayButtonClick: () => void
     @Event onContainerClick: () => void
     @Local fadeAnimFlag: boolean = false
-    private readonly animationDuration = 800
+    private clickCount = 1
 
     @Monitor("cover")
     onCoverChanged() {
-        this.getUIContext().animateTo({ duration: this.animationDuration }, () => {
+        this.getUIContext().animateTo({ duration: 500 }, () => {
             this.fadeAnimFlag = !this.fadeAnimFlag
         })
     }
@@ -52,7 +52,6 @@ export struct FloatControllerView {
                 Column() {
                     Text(this.title)
                         .fontColor(this.primaryColor)
-                        .animation({ duration: this.animationDuration })
                         .fontSize(24)
                         .fontWeight(FontWeight.Bold)
                         .maxLines(1)
@@ -60,7 +59,6 @@ export struct FloatControllerView {
                         .width("100%")
                     Text(this.artist)
                         .fontColor(this.primaryColor)
-                        .animation({ duration: this.animationDuration })
                         .fontSize(18)
                         .maxLines(1)
                         .textOverflow({ overflow: TextOverflow.MARQUEE })
@@ -76,12 +74,13 @@ export struct FloatControllerView {
 
                 SymbolGlyph(this.isPlaying ? $r("sys.symbol.pause_fill") : $r("sys.symbol.play_fill"))
                     .fontColor([this.primaryColor])
-                    .animation({ duration: this.animationDuration })
                     .fontSize(32)
+                    .symbolEffect(new ReplaceSymbolEffect(EffectScope.LAYER), this.clickCount)
                     .clickEffect({ level: ClickEffectLevel.HEAVY, scale: 0.8 })
                     .hoverEffect(HoverEffect.Highlight)
                     .margin({ right: 16 })
                     .onClick(() => {
+                        this.clickCount++
                         this.onPlayButtonClick?.()
                     })
 
@@ -93,7 +92,6 @@ export struct FloatControllerView {
                         .fontSize(18)
                 }
                 .fontColor(this.primaryColor)
-                .animation({ duration: this.animationDuration })
                 .textAlign(TextAlign.End)
             }
             .width("100%")
@@ -112,7 +110,6 @@ export struct FloatControllerView {
             offsetY: 12
         })
         .backgroundColor(this.primaryColorDark)
-        .animation({ duration: this.animationDuration })
         .clip(true)
         .onClick(() => {
             this.onContainerClick?.()

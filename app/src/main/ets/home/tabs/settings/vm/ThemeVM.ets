@@ -1,3 +1,4 @@
+import { animate } from '../../../../base/extensions/Extensions'
 import { IVM } from '../../../../base/IVM'
 import { UIConstants } from '../../../../base/UIConstants'
 import { Palette } from '../../../../base/view/Palette'
@@ -16,8 +17,10 @@ export class ThemeVM implements IVM {
     @Trace rootPaddingLeft: number = 16
     @Trace rootPaddingRight: number = 16
     private palette = new Palette()
+    private context?: UIContext = undefined
 
     async onCreate(context: UIContext) {
+        this.context = context
     }
 
     onDestroy(): void {
@@ -25,15 +28,20 @@ export class ThemeVM implements IVM {
     }
 
     reset() {
-        this.primaryColor = UIConstants.DEFAULT_PRIMARY_COLOR
-        this.primaryColorDark = UIConstants.DEFAULT_PRIMARY_COLOR_DARK
+        animate(this.context!, () => {
+            this.primaryColor = UIConstants.DEFAULT_PRIMARY_COLOR
+            this.primaryColorDark = UIConstants.DEFAULT_PRIMARY_COLOR_DARK
+        }, 500, false)
     }
 
     updateByPixelmap(pixelmap: PixelMap | undefined) {
         if (pixelmap !== undefined) {
             this.palette.setImage(pixelmap).then(() => {
                 const color = this.palette.getThemeColor()
-                this.update(color[0], color[1])
+                animate(this.context!, () => {
+                    this.primaryColor = color[0]
+                    this.primaryColorDark = color[1]
+                }, 500, true)
             })
         } else {
             this.reset()
@@ -41,8 +49,10 @@ export class ThemeVM implements IVM {
     }
 
     update(primaryColor: string, primaryColorDark: string) {
-        this.primaryColor = primaryColor
-        this.primaryColorDark = primaryColorDark
+        animate(this.context!, () => {
+            this.primaryColor = primaryColor
+            this.primaryColorDark = primaryColorDark
+        }, 500, false)
     }
 
     updatePrimaryColor(primaryColor: string) {
