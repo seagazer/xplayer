@@ -1,11 +1,11 @@
-import { ThemeVM } from '../home/tabs/settings/vm/ThemeVM'
+import { ThemeVM } from '../home/tabs/vm/ThemeVM'
 import { AppStorageV2 } from '@kit.ArkUI'
 import { duration2Text, stringToHex } from '../base/extensions/Extensions'
 import { CcLyricController, CcLyricView } from '@seagazer/cclyric'
 import { MockData, StringParser } from '../mock/MockData'
 import { XLogger } from '../base/extensions/XLogger'
 import { PlayerVM } from './vm/PlayerVM'
-import { MediaLibraryVM } from '../home/tabs/library/vm/MediaLibraryVM'
+import { MediaLibraryVM } from '../home/tabs/vm/MediaLibraryVM'
 import { ImageView } from '../base/view/ImageView'
 
 const TAG = "[PlayerPage]"
@@ -17,16 +17,16 @@ const TAG = "[PlayerPage]"
  */
 @ComponentV2({ freezeWhenInactive: true })
 export struct PlayerPage {
-    private theme: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
-    @Local player: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
-    private playlist: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
+    private themeVM: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
+    @Local playerVM: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
+    private mediaLibraryVM: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
     @Local gradientRadius: number = 0
     private lrcController = new CcLyricController()
     private navPath = new NavPathStack()
 
-    @Monitor("player.playerProgress")
+    @Monitor("playerVM.playerProgress")
     onProgressChanged() {
-        this.lrcController.updatePosition(this.player.playerProgress)
+        this.lrcController.updatePosition(this.playerVM.playerProgress)
     }
 
     aboutToAppear(): void {
@@ -34,11 +34,11 @@ export struct PlayerPage {
             .setLineSpace(12)
             .setTextSize(22)
             .setHighlightScale(1.1)
-            .setTextColor(stringToHex(this.theme!.primaryColor))
-            .setTextHighlightColor(stringToHex(this.theme!.primaryColorDark))
+            .setTextColor(stringToHex(this.themeVM!.primaryColor))
+            .setTextHighlightColor(stringToHex(this.themeVM!.primaryColorDark))
             .setFadeColor(Color.Transparent)
             .setEmptyHint("未找到歌词")
-            .setLrcAnimDuration(100)
+            .setLrcAnimDuration(200)
         // todo test lyric data
         const lyric = new StringParser().parse(MockData.krc7)
         XLogger.w(TAG, JSON.stringify(lyric))
@@ -50,7 +50,7 @@ export struct PlayerPage {
             Column() {
                 Stack() {
                     SymbolGlyph($r("sys.symbol.chevron_left"))
-                        .fontColor([this.theme?.primaryColor])
+                        .fontColor([this.themeVM?.primaryColor])
                         .fontSize(32)
                 }
                 .clickEffect({ level: ClickEffectLevel.HEAVY, scale: 0.8 })
@@ -67,11 +67,11 @@ export struct PlayerPage {
 
                 Row() {
                     Column() {
-                        ImageView({ url: this.player.coverUrl, corner: 16 })
+                        ImageView({ url: this.playerVM.coverUrl, corner: 16 })
                             .width(240)
                             .height(240)
-                        Text(this.player.mediaTitle)
-                            .fontColor(this.theme?.primaryColor)
+                        Text(this.playerVM.mediaTitle)
+                            .fontColor(this.themeVM?.primaryColor)
                             .fontSize(24)
                             .fontWeight(FontWeight.Bold)
                             .maxLines(1)
@@ -85,8 +85,8 @@ export struct PlayerPage {
                             })
                             .clip(false)
                             .margin({ top: 24 })
-                        Text(this.player.mediaArtist)
-                            .fontColor(this.theme?.primaryColor)
+                        Text(this.playerVM.mediaArtist)
+                            .fontColor(this.themeVM?.primaryColor)
                             .fontSize(18)
                             .maxLines(1)
                             .textOverflow({ overflow: TextOverflow.MARQUEE })
@@ -104,14 +104,14 @@ export struct PlayerPage {
                     .height("100%")
                     .justifyContent(FlexAlign.Center)
 
-                    if (this.player.showLyric) {
+                    if (this.playerVM.showLyric) {
                         Column() {
                             CcLyricView({
                                 controller: this.lrcController,
                                 supportSeek: false,
                                 onDataSourceReady: () => {
-                                    XLogger.w(TAG, "init scroll to " + this.player.userProgress)
-                                    this.lrcController.updatePosition(this.player.playerProgress)
+                                    XLogger.w(TAG, "init scroll to " + this.playerVM.userProgress)
+                                    this.lrcController.updatePosition(this.playerVM.playerProgress)
                                 }
                             })
                         }
@@ -130,33 +130,33 @@ export struct PlayerPage {
                     // TODO seek bar
                     Slider({
                         style: SliderStyle.OutSet,
-                        max: this.player.duration,
-                        value: this.player.userProgress
+                        max: this.playerVM.duration,
+                        value: this.playerVM.userProgress
                     })
                         .width("100%")
-                        .trackColor(this.theme?.primaryColorDark)
-                        .selectedColor(this.theme?.primaryColor)
+                        .trackColor(this.themeVM?.primaryColorDark)
+                        .selectedColor(this.themeVM?.primaryColor)
                         .onChange((value, mode) => {
-                            this.player.onSeekChanged(value, mode)
+                            this.playerVM.onSeekChanged(value, mode)
                         })
 
                     // controller bar
                     Row() {
                         Text() {
-                            Span(duration2Text(this.player.playerProgress))
+                            Span(duration2Text(this.playerVM.playerProgress))
                                 .fontSize(24)
-                            Span(" / " + duration2Text(this.player.duration))
+                            Span(" / " + duration2Text(this.playerVM.duration))
                                 .fontSize(18)
                         }
-                        .fontColor(this.theme?.primaryColor)
+                        .fontColor(this.themeVM?.primaryColor)
                         .animation({ duration: 1000 })
                         .textAlign(TextAlign.End)
 
                         Blank()
 
-                        if (!this.playlist.isEmpty) {
+                        if (!this.mediaLibraryVM.isEmpty) {
                             SymbolGlyph($r("sys.symbol.backward_end_fill"))
-                                .fontColor([this.theme?.primaryColor])
+                                .fontColor([this.themeVM?.primaryColor])
                                 .fontSize(32)
                                 .clickEffect({ level: ClickEffectLevel.HEAVY, scale: 0.8 })
                                 .hoverEffect(HoverEffect.Highlight)
@@ -166,7 +166,7 @@ export struct PlayerPage {
                                 })
 
                             SymbolGlyph($r("sys.symbol.forward_end_fill"))
-                                .fontColor([this.theme?.primaryColor])
+                                .fontColor([this.themeVM?.primaryColor])
                                 .fontSize(32)
                                 .clickEffect({ level: ClickEffectLevel.HEAVY, scale: 0.8 })
                                 .hoverEffect(HoverEffect.Highlight)
@@ -176,23 +176,23 @@ export struct PlayerPage {
                                 })
                         }
 
-                        SymbolGlyph(this.player.isPlaying ? $r("sys.symbol.pause_fill") : $r("sys.symbol.play_fill"))
-                            .fontColor([this.theme?.primaryColor])
+                        SymbolGlyph(this.playerVM.isPlaying ? $r("sys.symbol.pause_fill") : $r("sys.symbol.play_fill"))
+                            .fontColor([this.themeVM?.primaryColor])
                             .fontSize(32)
                             .clickEffect({ level: ClickEffectLevel.HEAVY, scale: 0.8 })
                             .hoverEffect(HoverEffect.Highlight)
                             .margin({ left: 16 })
                             .onClick(() => {
-                                if (this.player.isPlaying) {
-                                    this.player.pause()
+                                if (this.playerVM.isPlaying) {
+                                    this.playerVM.pause()
                                 } else {
-                                    this.player.start()
+                                    this.playerVM.start()
                                 }
                             })
 
-                        if (!this.playlist.isEmpty) {
+                        if (!this.mediaLibraryVM.isEmpty) {
                             SymbolGlyph($r("sys.symbol.list_square"))
-                                .fontColor([this.theme?.primaryColor])
+                                .fontColor([this.themeVM?.primaryColor])
                                 .fontSize(32)
                                 .clickEffect({ level: ClickEffectLevel.HEAVY, scale: 0.8 })
                                 .hoverEffect(HoverEffect.Highlight)
@@ -203,14 +203,14 @@ export struct PlayerPage {
                         }
 
                         SymbolGlyph($r("sys.symbol.lyrics_square"))
-                            .fontColor([this.theme?.primaryColor])
+                            .fontColor([this.themeVM?.primaryColor])
                             .fontSize(32)
                             .clickEffect({ level: ClickEffectLevel.HEAVY, scale: 0.8 })
                             .hoverEffect(HoverEffect.Highlight)
                             .margin({ left: 16 })
                             .onClick(() => {
                                 this.getUIContext().animateTo({ duration: 500 }, () => {
-                                    this.player.showLyric = !this.player.showLyric
+                                    this.playerVM.showLyric = !this.playerVM.showLyric
                                 })
                             })
                     }
@@ -225,14 +225,14 @@ export struct PlayerPage {
             .height('100%')
             .width('100%')
             .padding({
-                top: this.theme.rootPaddingTop,
-                bottom: this.theme.rootPaddingBottom,
+                top: this.themeVM.rootPaddingTop,
+                bottom: this.themeVM.rootPaddingBottom,
             })
             .alignItems(HorizontalAlign.Start)
             .radialGradient({
                 center: ["50%", "50%"],
                 radius: this.gradientRadius === 0 ? "100%" : this.gradientRadius,
-                colors: [[this.theme!.primaryColor, 0], ["#bf000000", 1]]
+                colors: [[this.themeVM!.primaryColor, 0], ["#bf000000", 1]]
             })
         }
         .width('100%')

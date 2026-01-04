@@ -1,4 +1,4 @@
-import { ThemeVM } from "../tabs/settings/vm/ThemeVM"
+import { ThemeVM } from "../tabs/vm/ThemeVM"
 
 /**
  *

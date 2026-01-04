@@ -1,7 +1,7 @@
-import { animate } from '../../../../base/extensions/Extensions'
-import { IVM } from '../../../../base/IVM'
-import { UIConstants } from '../../../../base/UIConstants'
-import { Palette } from '../../../../base/view/Palette'
+import { animate } from '../../../base/extensions/Extensions'
+import { IVM } from '../../../base/IVM'
+import { UIConstants } from '../../../base/UIConstants'
+import { Palette } from '../../../base/view/Palette'
 
 /**
  *

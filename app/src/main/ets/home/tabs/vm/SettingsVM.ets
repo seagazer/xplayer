@@ -1,5 +1,5 @@
-import { IVM } from '../../../../base/IVM'
-import { UIConstants } from '../../../../base/UIConstants'
+import { IVM } from '../../../base/IVM'
+import { UIConstants } from '../../../base/UIConstants'
 
 /**
  *

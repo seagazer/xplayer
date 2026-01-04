@@ -1,9 +1,9 @@
 import { AppStorageV2 } from '@kit.ArkUI'
 import { UIConstants } from '../../../base/UIConstants'
 import { ImageView } from '../../../base/view/ImageView'
-import { ThemeVM } from '../settings/vm/ThemeVM'
+import { ThemeVM } from '../vm/ThemeVM'
 import { tabTitleStyle } from '../Style'
-import { AlbumVM } from './AlbumVM'
+import { MediaLibraryVM } from '../vm/MediaLibraryVM'
 
 /**
  *
@@ -18,7 +18,7 @@ export function TabAlbumView() {
 @ComponentV2
 struct TabAlbum {
     private themeVM: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
-    private albumVM: AlbumVM = AppStorageV2.connect<AlbumVM>(AlbumVM, () => new AlbumVM())!
+    private mediaLibraryVM: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
 
     build() {
         Column() {
@@ -26,15 +26,15 @@ struct TabAlbum {
                 .attributeModifier(tabTitleStyle)
 
             Row() {
-                Text("共" + this.albumVM.albumList.length + "个专辑")
+                Text("共" + this.mediaLibraryVM.albumList.length + "个专辑")
                     .fontSize(20)
-                    .fontColor("#ccffffff")
+                    .fontColor(UIConstants.DEFAULT_TEXT_COLOR)
             }
             .margin({ top: 24, bottom: 16 })
 
             Column() {
                 Grid() {
-                    Repeat(this.albumVM.albumList)
+                    Repeat(this.mediaLibraryVM.albumList)
                         .each((repeatItem) => {
                             GridItem() {
                                 Stack() {
@@ -46,7 +46,7 @@ struct TabAlbum {
                                     Column() {
                                         Text("共" + repeatItem.item.mediaList.length + "首歌曲")
                                             .fontSize(16)
-                                            .fontColor("#ccffffff")
+                                            .fontColor(UIConstants.DEFAULT_TEXT_COLOR)
                                             .padding(8)
                                             .backgroundColor("#80000000")
                                             .border({ radius: { topRight: 8, bottomLeft: 8 } })
@@ -56,7 +56,7 @@ struct TabAlbum {
                                             .maxLines(1)
                                             .textOverflow({ overflow: TextOverflow.Ellipsis })
                                             .fontSize(18)
-                                            .fontColor("#ccffffff")
+                                            .fontColor(UIConstants.DEFAULT_TEXT_COLOR)
                                             .padding({ left: 12, right: 12 })
                                             .width("100%")
                                             .height(50)
@@ -75,7 +75,7 @@ struct TabAlbum {
                             .width("100%")
                             .height(300)
                             .clickEffect({ level: ClickEffectLevel.LIGHT, scale: 0.95 })
-                        }).virtualScroll({ totalCount: this.albumVM.albumList.length })
+                        }).virtualScroll({ totalCount: this.mediaLibraryVM.albumList.length })
                         .key((item) => {
                             return item.title
                         })

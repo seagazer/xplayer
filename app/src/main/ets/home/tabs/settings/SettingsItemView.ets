@@ -1,3 +1,4 @@
+import { UIConstants } from '../../../base/UIConstants'
 import { ThemeVM } from '../vm/ThemeVM'
 
 @ComponentV2
@@ -8,12 +9,12 @@ export struct SettingsCategory {
         Column() {
             Text(this.title)
                 .fontSize(24)
-                .fontColor("#ccffffff")
+                .fontColor(UIConstants.DEFAULT_TEXT_COLOR)
             Line()
                 .width("100%")
                 .height(1)
-                .margin({ top: 8 })
-                .backgroundColor("#80ffffff")
+                .margin({ top: 16 })
+                .backgroundColor(UIConstants.DEFAULT_TEXT_COLOR)
         }
         .width("100%")
         .alignItems(HorizontalAlign.Start)

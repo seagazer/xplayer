@@ -1,11 +1,11 @@
 import { CcPlayer, MediaSourceFactory, PlayerState } from '@seagazer/ccplayer'
 import { XLogger } from '../../base/extensions/XLogger'
-import { MediaFile } from '../../base/file/MediaFile'
+import { MediaFile } from '../../base/model/MediaFile'
 import { IVM } from '../../base/IVM'
 import { common, wantAgent } from '@kit.AbilityKit'
 import { ImageLoader } from '../../base/http/ImageLoader'
-import { ThemeVM } from '../../home/tabs/settings/vm/ThemeVM'
-import { SettingsVM } from '../../home/tabs/settings/vm/SettingsVM'
+import { ThemeVM } from '../../home/tabs/vm/ThemeVM'
+import { SettingsVM } from '../../home/tabs/vm/SettingsVM'
 import { AppStorageV2 } from '@kit.ArkUI'
 
 
@@ -73,8 +73,8 @@ export class PlayerVM implements IVM {
         this.player?.release()
     }
 
-    private theme: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
-    private settings: SettingsVM = AppStorageV2.connect<SettingsVM>(SettingsVM, () => new SettingsVM())!
+    private themeVM: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
+    private settingsVM: SettingsVM = AppStorageV2.connect<SettingsVM>(SettingsVM, () => new SettingsVM())!
 
     async setSource(mediaFile: MediaFile, autoPlay: boolean = true) {
         this.mediaTitle = mediaFile.title
@@ -89,10 +89,10 @@ export class PlayerVM implements IVM {
             }
         })
         // update theme
-        XLogger.w(TAG, "auto theme= " + this.settings.autoMainTheme)
-        if (this.settings.autoMainTheme) {
+        XLogger.w(TAG, "auto theme= " + this.settingsVM.autoMainTheme)
+        if (this.settingsVM.autoMainTheme) {
             let pixelmap = await ImageLoader.get(this.context!.getHostContext()!).loadImage(mediaFile.coverUrl)
-            this.theme.updateByPixelmap(pixelmap)
+            this.themeVM.updateByPixelmap(pixelmap)
         }
     }
 

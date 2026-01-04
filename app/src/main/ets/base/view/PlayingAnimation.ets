@@ -16,23 +16,23 @@ export struct PlayingAnimation {
     build() {
         Row() {
             Stack()
-                .chunkStyle()
+                .style()
                 .scale({ y: this.scale1, centerY: "100%" })
 
             Stack()
-                .chunkStyle()
+                .style()
                 .scale({ y: this.scale2, centerY: "100%" })
 
             Stack()
-                .chunkStyle()
+                .style()
                 .scale({ y: this.scale3, centerY: "100%" })
 
             Stack()
-                .chunkStyle()
+                .style()
                 .scale({ y: this.scale4, centerY: "100%" })
 
             Stack()
-                .chunkStyle()
+                .style()
                 .scale({ y: this.scale5, centerY: "100%" })
         }
         .width(this.viewSize)
@@ -157,7 +157,7 @@ export struct PlayingAnimation {
     }
 
     @Styles
-    chunkStyle(){
+    style(){
         .height('100%')
         .width('10%')
         .margin({ left: '5%', right: '5%' })

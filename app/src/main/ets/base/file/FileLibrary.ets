@@ -3,7 +3,7 @@ import { XLogger } from '../extensions/XLogger';
 import { ComponentContent, UIContext } from '@kit.ArkUI';
 import { ImageLoader } from '../http/ImageLoader';
 import { Api } from '../api/Api';
-import { MediaFile } from './MediaFile';
+import { MediaFile } from '../model/MediaFile';
 import { media } from '@kit.MediaKit';
 
 

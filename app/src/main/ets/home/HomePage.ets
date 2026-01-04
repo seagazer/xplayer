@@ -1,4 +1,4 @@
-import { ThemeVM } from './tabs/settings/vm/ThemeVM'
+import { ThemeVM } from './tabs/vm/ThemeVM'
 import { AppStorageV2 } from '@kit.ArkUI'
 import { FloatControllerView } from './view/FloatControllerView'
 import { PlayerVM } from '../player/vm/PlayerVM'
@@ -15,8 +15,8 @@ import { PlayingAnimation } from '../base/view/PlayingAnimation'
  */
 @ComponentV2({ freezeWhenInactive: true })
 export struct HomePage {
-    @Local theme: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
-    private player: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
+    @Local themeVM: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
+    private playerVM: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
     private navigation = new NavPathStack()
     @Local gradientRadius: number = 0
     @Local selectedTabIndex: number = 0
@@ -33,9 +33,9 @@ export struct HomePage {
                                 .fontWeight(FontWeight.Bold)
                                 .fontColor(UIConstants.DEFAULT_PRIMARY_COLOR)
                             Stack() {
-                                if (this.player.isPlaying) {
+                                if (this.playerVM.isPlaying) {
                                     PlayingAnimation({
-                                        themeColor: this.theme.primaryColor,
+                                        themeColor: this.themeVM.primaryColor,
                                         viewSize: 24
                                     }).transition(TransitionEffect.OPACITY)
                                 }
@@ -55,7 +55,7 @@ export struct HomePage {
                                 icon: item.icon,
                                 title: item.title,
                                 isSelected: this.selectedTabIndex === item.index,
-                                theme: this.theme
+                                theme: this.themeVM
                             }).onClick(() => {
                                 this.selectedTabIndex = item.index
                                 this.tabsController.changeIndex(item.index)
@@ -68,8 +68,8 @@ export struct HomePage {
                     .justifyContent(FlexAlign.Start)
                     .alignItems(HorizontalAlign.Start)
                     .padding({
-                        top: this.theme.rootPaddingTop,
-                        bottom: this.theme.rootPaddingBottom,
+                        top: this.themeVM.rootPaddingTop,
+                        bottom: this.themeVM.rootPaddingBottom,
                         left: 16,
                         right: 16
                     })
@@ -90,19 +90,19 @@ export struct HomePage {
                 .height("100%")
 
                 FloatControllerView({
-                    primaryColor: this.theme.primaryColor,
-                    primaryColorDark: this.theme.primaryColorDark,
-                    title: this.player.mediaTitle,
-                    artist: this.player.mediaArtist,
-                    isPlaying: this.player.isPlaying,
-                    progress: this.player.userProgress,
-                    duration: this.player.duration,
-                    cover: this.player.coverUrl,
+                    primaryColor: this.themeVM.primaryColor,
+                    primaryColorDark: this.themeVM.primaryColorDark,
+                    title: this.playerVM.mediaTitle,
+                    artist: this.playerVM.mediaArtist,
+                    isPlaying: this.playerVM.isPlaying,
+                    progress: this.playerVM.userProgress,
+                    duration: this.playerVM.duration,
+                    cover: this.playerVM.coverUrl,
                     onPlayButtonClick: () => {
-                        if (this.player.isPlaying) {
-                            this.player.pause()
+                        if (this.playerVM.isPlaying) {
+                            this.playerVM.pause()
                         } else {
-                            this.player.start()
+                            this.playerVM.start()
                         }
                     },
                     onContainerClick: () => {
@@ -115,7 +115,7 @@ export struct HomePage {
                     .height(80)
                     .geometryTransition("controller", { follow: true })
                     .margin({ bottom: 24 })
-                    .translate({ y: this.player.currentItem !== undefined ? 0 : 160 })
+                    .translate({ y: this.playerVM.currentItem !== undefined ? 0 : 160 })
                     .animation({ duration: 500, curve: Curve.FastOutSlowIn })
 
             }.align(Alignment.Bottom)

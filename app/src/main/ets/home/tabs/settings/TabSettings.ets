@@ -1,9 +1,9 @@
 import { FileLibrary } from '../../../base/file/FileLibrary'
-import { MediaLibraryVM } from '../library/vm/MediaLibraryVM'
+import { MediaLibraryVM } from '../vm/MediaLibraryVM'
 import { AppStorageV2, ComponentContent } from '@kit.ArkUI'
-import { ThemeVM } from './vm/ThemeVM'
-import { SettingsVM } from './vm/SettingsVM'
-import { SettingsButtonItem, SettingsCategory, SettingsSwitchItem, SettingsTextItem } from './view/SettingsItemView'
+import { ThemeVM } from '../vm/ThemeVM'
+import { SettingsVM } from '../vm/SettingsVM'
+import { SettingsButtonItem, SettingsCategory, SettingsSwitchItem, SettingsTextItem } from './SettingsItemView'
 import { tabTitleStyle } from '../Style'
 import { ImageLoader } from '../../../base/http/ImageLoader'
 import { PlayerVM } from '../../../player/vm/PlayerVM'
@@ -23,10 +23,10 @@ export function TabSettingsView() {
 
 @ComponentV2
 struct TabSettings {
-    private mediaLibrary: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
-    private player: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
-    private theme: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
-    private settings: SettingsVM = AppStorageV2.connect<SettingsVM>(SettingsVM, () => new SettingsVM())!
+    private mediaLibraryVM: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
+    private playerVM: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
+    private themeVM: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
+    private settingsVM: SettingsVM = AppStorageV2.connect<SettingsVM>(SettingsVM, () => new SettingsVM())!
 
     build() {
         Column() {
@@ -56,18 +56,18 @@ struct TabSettings {
                         Text("动态主题色")
                             .fontSize(16)
                             .fontColor(Color.White)
-                        Toggle({ type: ToggleType.Switch, isOn: $$this.settings.autoMainTheme })
-                            .selectedColor(this.theme.primaryColor)
+                        Toggle({ type: ToggleType.Switch, isOn: $$this.settingsVM.autoMainTheme })
+                            .selectedColor(this.themeVM.primaryColor)
                             .width(50)
                             .height(24)
                             .onChange((isOn)=>{
                                 if (isOn) {
-                                    ImageLoader.get(this.getUIContext().getHostContext()!).loadImage(this.player.coverUrl)
+                                    ImageLoader.get(this.getUIContext().getHostContext()!).loadImage(this.playerVM.coverUrl)
                                         .then((result) => {
-                                            this.theme.updateByPixelmap(result)
+                                            this.themeVM.updateByPixelmap(result)
                                         })
                                 } else {
-                                    this.theme.reset()
+                                    this.themeVM.reset()
                                 }
                             })
                     }
@@ -95,21 +95,21 @@ struct TabSettings {
                     // lyric
                     SettingsCategory({ title: "歌词" })
                         .margin({ top: 24 })
-                    SettingsSwitchItem({ title: "左对齐", theme: this.theme, })
+                    SettingsSwitchItem({ title: "左对齐", theme: this.themeVM, })
                         .margin({ top: 16 })
-                    SettingsSwitchItem({ title: "自动下载歌词", theme: this.theme, })
+                    SettingsSwitchItem({ title: "自动下载歌词", theme: this.themeVM, })
                         .margin({ top: 16 })
                     SettingsButtonItem({
                         title: "字体大小", button: "20", onAction: () => {
 
                         }
                     }).margin({ top: 16 })
-                    SettingsSwitchItem({ title: "动态主题色", theme: this.theme, })
+                    SettingsSwitchItem({ title: "动态主题色", theme: this.themeVM, })
                         .margin({ top: 16 })
                     // about
                     SettingsCategory({ title: "关于" })
                         .margin({ top: 24 })
-                    SettingsTextItem({ title: "当前版本", value: this.settings.appVersion })
+                    SettingsTextItem({ title: "当前版本", value: this.settingsVM.appVersion })
                         .margin({ top: 16 })
                     SettingsButtonItem({
                         title: "激活状态", button: "激活", onAction: () => {
@@ -129,26 +129,24 @@ struct TabSettings {
         .height("100%")
         .alignItems(HorizontalAlign.Start)
         .padding({
-            top: this.theme.rootPaddingTop,
-            bottom: this.theme.rootPaddingBottom,
-            left: this.theme.rootPaddingLeft,
-            right: this.theme.rootPaddingRight
+            top: this.themeVM.rootPaddingTop,
+            bottom: this.themeVM.rootPaddingBottom,
+            left: this.themeVM.rootPaddingLeft,
+            right: this.themeVM.rootPaddingRight
         })
     }
 
     private async test() {
         const result = await new FileLibrary(this.getUIContext()).select()
         if (result !== undefined) {
-            this.mediaLibrary.mediaList.push(...result)
-            this.mediaLibrary.isEmpty = this.mediaLibrary.mediaList.length > 0
-            await this.mediaLibrary.add(result)
+            await this.mediaLibraryVM.add(result)
         }
     }
 
     private openActiveDialog() {
         const param = new ActiveParam((input) => {
             if (input === "12345") {
-                this.settings.appActive = true
+                this.settingsVM.appActive = true
             }
         })
         const content = new ComponentContent(this.getUIContext(), wrapBuilder(ActiveDialog), param)

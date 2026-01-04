@@ -1,10 +1,11 @@
-import { MediaLibraryVM } from './vm/MediaLibraryVM'
+import { MediaLibraryVM } from '../vm/MediaLibraryVM'
 import { AppStorageV2 } from '@kit.ArkUI'
 import { duration2Text } from '../../../base/extensions/Extensions'
 import { PlayerVM } from '../../../player/vm/PlayerVM'
-import { ThemeVM } from '../settings/vm/ThemeVM'
+import { ThemeVM } from '../vm/ThemeVM'
 import { tabTitleStyle } from '../Style'
 import { ImageView } from '../../../base/view/ImageView'
+import { UIConstants } from '../../../base/UIConstants'
 
 /**
  *
@@ -18,9 +19,9 @@ export function TabLibraryView() {
 
 @ComponentV2
 struct TabLibrary {
-    private mediaLibrary: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
-    private player: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
-    private theme: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
+    private mediaLibraryVM: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
+    private playerVM: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
+    private themeVM: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
 
     build() {
         Column() {
@@ -28,21 +29,22 @@ struct TabLibrary {
                 .attributeModifier(tabTitleStyle)
 
             Row() {
-                Text("共" + this.mediaLibrary.mediaList.length + "首音乐")
+                Text("共" + this.mediaLibraryVM.mediaList.length + "首音乐")
                     .fontSize(20)
-                    .fontColor("#ccffffff")
+                    .fontColor(UIConstants.DEFAULT_TEXT_COLOR)
             }
             .margin({ top: 24, bottom: 16 })
 
             Column() {
                 List({ space: 12 }) {
-                    Repeat(this.mediaLibrary.mediaList)
+                    Repeat(this.mediaLibraryVM.mediaList)
                         .each((repeatItem) => {
                             ListItem() {
                                 Row() {
                                     Text((repeatItem.index + 1).toString())
                                         .fontSize(24)
-                                        .fontColor(repeatItem.item.uri === this.player.currentItem?.uri ? this.theme.primaryColor : "#ccffffff")
+                                        .fontColor(repeatItem.item.uri === this.playerVM.currentItem?.uri ? this.themeVM.primaryColor :
+                                            UIConstants.DEFAULT_TEXT_COLOR)
                                         .fontWeight(FontWeight.Bold)
                                         .padding({ left: 8, right: 16 })
 
@@ -52,11 +54,13 @@ struct TabLibrary {
                                     Column() {
                                         Text(repeatItem.item.title)
                                             .fontSize(18)
-                                            .fontColor(repeatItem.item.uri === this.player.currentItem?.uri ? this.theme.primaryColor : "#ccffffff")
+                                            .fontColor(repeatItem.item.uri === this.playerVM.currentItem?.uri ? this.themeVM.primaryColor :
+                                                UIConstants.DEFAULT_TEXT_COLOR)
                                         Text(repeatItem.item.artist)
                                             .fontSize(14)
                                             .margin({ top: 4 })
-                                            .fontColor(repeatItem.item.uri === this.player.currentItem?.uri ? this.theme.primaryColor : "#99ffffff")
+                                            .fontColor(repeatItem.item.uri === this.playerVM.currentItem?.uri ? this.themeVM.primaryColor :
+                                                "#99ffffff")
                                     }
                                     .height("100%")
                                     .margin({ left: 16 })
@@ -67,7 +71,8 @@ struct TabLibrary {
 
                                     Text(duration2Text(repeatItem.item.duration))
                                         .fontSize(18)
-                                        .fontColor(repeatItem.item.uri === this.player.currentItem?.uri ? this.theme.primaryColor : "#ccffffff")
+                                        .fontColor(repeatItem.item.uri === this.playerVM.currentItem?.uri ? this.themeVM.primaryColor :
+                                            UIConstants.DEFAULT_TEXT_COLOR)
                                 }
                                 .width("100%")
                                 .height("100%")
@@ -77,11 +82,11 @@ struct TabLibrary {
                             .height(56)
                             .clickEffect({ level: ClickEffectLevel.LIGHT, scale: 0.95 })
                             .border({ radius: 4 })
-                            .backgroundColor(repeatItem.item.uri === this.player.currentItem?.uri ? "#33ffffff" : Color.Transparent)
+                            .backgroundColor(repeatItem.item.uri === this.playerVM.currentItem?.uri ? "#33ffffff" : Color.Transparent)
                             .onClick(async () => {
-                                this.player.setSource(repeatItem.item)
+                                this.playerVM.setSource(repeatItem.item)
                             })
-                        }).virtualScroll({ totalCount: this.mediaLibrary.mediaList.length })
+                        }).virtualScroll({ totalCount: this.mediaLibraryVM.mediaList.length })
                         .key((item) => {
                             return item.uri
                         })
@@ -97,10 +102,10 @@ struct TabLibrary {
         .justifyContent(FlexAlign.Start)
         .alignItems(HorizontalAlign.Start)
         .padding({
-            top: this.theme.rootPaddingTop,
-            bottom: this.theme.rootPaddingBottom,
-            left: this.theme.rootPaddingLeft,
-            right: this.theme.rootPaddingRight
+            top: this.themeVM.rootPaddingTop,
+            bottom: this.themeVM.rootPaddingBottom,
+            left: this.themeVM.rootPaddingLeft,
+            right: this.themeVM.rootPaddingRight
         })
     }
 }

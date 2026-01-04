@@ -1,14 +1,13 @@
 import { PlayerVM } from '../player/vm/PlayerVM'
-import { MediaLibraryVM } from '../home/tabs/library/vm/MediaLibraryVM'
-import { SettingsVM } from '../home/tabs/settings/vm/SettingsVM'
-import { ThemeVM } from '../home/tabs/settings/vm/ThemeVM'
+import { MediaLibraryVM } from '../home/tabs/vm/MediaLibraryVM'
+import { SettingsVM } from '../home/tabs/vm/SettingsVM'
+import { ThemeVM } from '../home/tabs/vm/ThemeVM'
 import { AppStorageV2, window } from '@kit.ArkUI'
 import { XLogger } from '../base/extensions/XLogger'
 import { common } from '@kit.AbilityKit'
 import { RouterConstants } from '../base/Router'
 import { DbHelper } from '../base/db/DbHelper'
 import { UIConstants } from '../base/UIConstants'
-import { AlbumVM } from '../home/tabs/album/AlbumVM'
 
 const TAG = "[Splash]"
 
@@ -26,7 +25,6 @@ export struct SplashPage {
     private playerVM: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
     private settingsVM: SettingsVM = AppStorageV2.connect<SettingsVM>(SettingsVM, () => new SettingsVM())!
     private mediaLibraryVM: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
-    private albumVM: AlbumVM = AppStorageV2.connect<AlbumVM>(AlbumVM, () => new AlbumVM())!
 
     build() {
         NavDestination() {
@@ -81,7 +79,6 @@ export struct SplashPage {
             await this.themeVM.onCreate(this.getUIContext())
             await this.playerVM.onCreate(this.getUIContext())
             await this.mediaLibraryVM.onCreate(this.getUIContext())
-            await this.albumVM.onCreate(this.getUIContext())
             await this.settingsVM.onCreate(this.getUIContext())
             this.onAppReady()
         } catch (e) {

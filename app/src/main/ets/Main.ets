@@ -1,4 +1,4 @@
-import { SettingsVM } from './home/tabs/settings/vm/SettingsVM';
+import { SettingsVM } from './home/tabs/vm/SettingsVM';
 import { AppStorageV2 } from '@kit.ArkUI';
 import { RouterConstants, RouterMapper } from './base/Router';
 
@@ -6,7 +6,7 @@ import { RouterConstants, RouterMapper } from './base/Router';
 @ComponentV2
 struct Index {
     private navPathStack = new NavPathStack()
-    private settings: SettingsVM = AppStorageV2.connect<SettingsVM>(SettingsVM, () => new SettingsVM())!
+    private settingsVM: SettingsVM = AppStorageV2.connect<SettingsVM>(SettingsVM, () => new SettingsVM())!
 
     aboutToAppear(): void {
         this.navPathStack.replacePath({ name: RouterConstants.SPLASH }, false)
@@ -23,7 +23,7 @@ struct Index {
             .hideTitleBar(true)
                 .hideNavBar(true)
 
-            if (!this.settings.appActive) {
+            if (!this.settingsVM.appActive) {
                 // active MASK
                 Text("Listen By \n Seagazer")
                     .fontColor("#1affffff")

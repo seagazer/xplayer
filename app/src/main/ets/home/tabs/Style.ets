@@ -1,3 +1,5 @@
+import { UIConstants } from '../../base/UIConstants'
+
 /**
  *
  * Author: Seagazer
@@ -7,7 +9,7 @@ export class TabTitleStyle implements AttributeModifier<TextAttribute> {
     applyNormalAttribute(instance: TextAttribute): void {
         instance.fontSize(32)
             .fontWeight(FontWeight.Bold)
-            .fontColor("#ccffffff")
+            .fontColor(UIConstants.DEFAULT_TEXT_COLOR)
     }
 }
 

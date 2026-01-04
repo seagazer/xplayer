@@ -1,5 +1,5 @@
 import { AppStorageV2 } from '@kit.ArkUI'
-import { ThemeVM } from '../settings/vm/ThemeVM'
+import { ThemeVM } from '../vm/ThemeVM'
 import { tabTitleStyle } from '../Style'
 
 /**
@@ -14,7 +14,7 @@ export function TabPlaylistView() {
 
 @ComponentV2
 struct TabPlaylist {
-    private theme: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
+    private themeVM: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
 
     build() {
         Column() {
@@ -26,10 +26,10 @@ struct TabPlaylist {
         .justifyContent(FlexAlign.Start)
         .alignItems(HorizontalAlign.Start)
         .padding({
-            top: this.theme.rootPaddingTop,
-            bottom: this.theme.rootPaddingBottom,
-            left: this.theme.rootPaddingLeft,
-            right: this.theme.rootPaddingRight
+            top: this.themeVM.rootPaddingTop,
+            bottom: this.themeVM.rootPaddingBottom,
+            left: this.themeVM.rootPaddingLeft,
+            right: this.themeVM.rootPaddingRight
         })
     }
 }
