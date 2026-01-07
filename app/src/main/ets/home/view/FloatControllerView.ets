@@ -24,7 +24,7 @@ export struct FloatControllerView {
 
     @Monitor("cover")
     onCoverChanged() {
-        this.getUIContext().animateTo({ duration: 500 }, () => {
+        this.getUIContext().animateTo({ duration: UIConstants.VIEW_TRANSITION_DURATION }, () => {
             this.fadeAnimFlag = !this.fadeAnimFlag
         })
     }

@@ -7,6 +7,7 @@ import { XLogger } from '../base/extensions/XLogger'
 import { PlayerVM } from './vm/PlayerVM'
 import { MediaLibraryVM } from '../home/tabs/vm/MediaLibraryVM'
 import { ImageView } from '../base/view/ImageView'
+import { UIConstants } from '../base/UIConstants'
 
 const TAG = "[PlayerPage]"
 
@@ -208,7 +209,7 @@ export struct PlayerPage {
                             .hoverEffect(HoverEffect.Highlight)
                             .margin({ left: 16 })
                             .onClick(() => {
-                                this.getUIContext().animateTo({ duration: 500 }, () => {
+                                this.getUIContext().animateTo({ duration: UIConstants.VIEW_TRANSITION_DURATION }, () => {
                                     this.playerVM.showLyric = !this.playerVM.showLyric
                                 })
                             })
@@ -254,7 +255,7 @@ export struct PlayerPage {
     }
 
     private back() {
-        this.getUIContext().animateTo({ duration: 500 }, () => {
+        this.getUIContext().animateTo({ duration: UIConstants.PAGE_TRANSITION_DURATION }, () => {
             this.navPath.pop(false)
         })
     }

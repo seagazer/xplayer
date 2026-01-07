@@ -1,8 +1,8 @@
 import { ColumnValueType, DbHelper, Table } from '../../../base/db/DbHelper'
 import { XLogger } from '../../../base/extensions/XLogger'
-import { MediaFile } from '../../../base/model/MediaFile'
 import { IVM } from '../../../base/IVM'
 import { Album } from '../../../base/model/Album'
+import { MediaFile } from '../../../base/model/MediaFile'
 
 const TAG = "[MediaLibraryVM]"
 
@@ -28,6 +28,7 @@ export class MediaLibraryVM implements IVM {
         this.table.addColumn("uri", ColumnValueType.STRING)
         this.table.addColumn("duration", ColumnValueType.NUMBER)
         this.table.addColumn("coverUrl", ColumnValueType.STRING)
+        this.table.addColumn("isFavourite", ColumnValueType.NUMBER)
         await DbHelper.getInstance().createTable(this.table)
         const cache = await this.get()
         if (cache != undefined && cache.length > 0) {
@@ -37,13 +38,12 @@ export class MediaLibraryVM implements IVM {
         }
     }
 
-    onDestroy(): void {
-
-    }
-
     private generateAlbum(list: MediaFile[]) {
         for (let i = 0; i < list.length; i++) {
             const mediaItem = list[i]
+            if (mediaItem.isFavourite === 1) {
+                this.favouriteList.push(mediaItem)
+            }
             let albumName = mediaItem.album
             if (albumName.trim() === "") {
                 albumName = "未知"
@@ -54,7 +54,9 @@ export class MediaLibraryVM implements IVM {
                 if (item.title === albumName) {
                     isAlbumExist = true
                     const list = item.mediaList
-                    list.push(mediaItem)
+                    if (list.indexOf(mediaItem) < 0) {
+                        list.push(mediaItem)
+                    }
                     break
                 }
             }
@@ -74,9 +76,14 @@ export class MediaLibraryVM implements IVM {
         })
     }
 
+    onDestroy(): void {
+
+    }
+
     async add(list: MediaFile[]) {
         this.mediaList.push(...list)
         this.isEmpty = this.mediaList.length > 0
+        this.generateAlbum(list)
         if (this.table === undefined) {
             XLogger.e(TAG, "the table is not created")
             return
@@ -104,5 +111,4 @@ export class MediaLibraryVM implements IVM {
         item.isFavourite = result
         await this.table.update("uri", item)
     }
-
 }

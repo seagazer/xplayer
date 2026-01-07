@@ -87,7 +87,7 @@ export struct SplashPage {
     }
 
     private onAppReady() {
-        this.getUIContext().animateTo({ duration: 500 }, () => {
+        this.getUIContext().animateTo({ duration: UIConstants.PAGE_TRANSITION_DURATION }, () => {
             this.navPathStack.replacePath({ name: RouterConstants.HOME }, true)
         })
     }

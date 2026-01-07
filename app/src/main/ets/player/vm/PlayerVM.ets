@@ -7,6 +7,7 @@ import { ImageLoader } from '../../base/http/ImageLoader'
 import { ThemeVM } from '../../home/tabs/vm/ThemeVM'
 import { SettingsVM } from '../../home/tabs/vm/SettingsVM'
 import { AppStorageV2 } from '@kit.ArkUI'
+import { UIConstants } from '../../base/UIConstants'
 
 
 const TAG = "[PlayerVM]"
@@ -41,7 +42,7 @@ export class PlayerVM implements IVM {
         this.userProgress = position
     }
     private stateChangedListener = (state: PlayerState) => {
-        this.context?.animateTo({ duration: 500 }, () => {
+        this.context?.animateTo({ duration: UIConstants.VIEW_TRANSITION_DURATION }, () => {
             this.isPlaying = this.player!.isPlaying()
         })
     }

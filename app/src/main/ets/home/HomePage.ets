@@ -106,7 +106,7 @@ export struct HomePage {
                         }
                     },
                     onContainerClick: () => {
-                        this.getUIContext().animateTo({ duration: 300 }, () => {
+                        this.getUIContext().animateTo({ duration: UIConstants.PAGE_TRANSITION_DURATION }, () => {
                             this.navigation.pushPath({ name: RouterConstants.PLAYER }, false)
                         })
                     }
@@ -116,7 +116,7 @@ export struct HomePage {
                     .geometryTransition("controller", { follow: true })
                     .margin({ bottom: 24 })
                     .translate({ y: this.playerVM.currentItem !== undefined ? 0 : 160 })
-                    .animation({ duration: 500, curve: Curve.FastOutSlowIn })
+                    .animation({ duration: UIConstants.VIEW_TRANSITION_DURATION, curve: Curve.Smooth })
 
             }.align(Alignment.Bottom)
         }
