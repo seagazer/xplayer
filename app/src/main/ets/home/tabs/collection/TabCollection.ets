@@ -1,6 +1,9 @@
 import { AppStorageV2 } from '@kit.ArkUI'
-import { ThemeVM } from '../vm/ThemeVM'
+import { PlayerVM } from '../../../player/vm/PlayerVM'
 import { tabTitleStyle } from '../Style'
+import { MediaLibraryVM } from '../vm/MediaLibraryVM'
+import { ThemeVM } from '../vm/ThemeVM'
+import { CollectionItemView } from './CollectionItemView'
 
 /**
  *
@@ -14,6 +17,8 @@ export function TabCollectionView() {
 
 @ComponentV2
 struct TabCollection {
+    private mediaLibraryVM: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
+    private playerVM: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
     private themeVM: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
 
     build() {
@@ -21,6 +26,47 @@ struct TabCollection {
             Text("收藏")
                 .attributeModifier(tabTitleStyle)
 
+            Row() {
+                Text("共" + this.mediaLibraryVM.favouriteList.length + "首收藏")
+                    .fontSize(20)
+                    .fontColor("#ccffffff")
+            }
+            .margin({ top: 24, bottom: 16 })
+
+            Column() {
+                List({ space: 12 }) {
+                    Repeat(this.mediaLibraryVM.favouriteList)
+                        .each((repeatItem) => {
+                            ListItem() {
+                                CollectionItemView({
+                                    index: repeatItem.index,
+                                    item: repeatItem.item,
+                                    primaryColor: this.themeVM.primaryColor,
+                                    isHighlight: this.playerVM.currentItem === repeatItem.item,
+                                    unCollection: () => {
+                                        this.mediaLibraryVM.updateFavourite(repeatItem.item, 0)
+                                    }
+                                })
+                            }
+                            .width("100%")
+                            .height(56)
+                            .clickEffect({ level: ClickEffectLevel.LIGHT, scale: 0.95 })
+                            .border({ radius: 4 })
+                            .backgroundColor(repeatItem.item.uri === this.playerVM.currentItem?.uri ? "#33ffffff" : Color.Transparent)
+                            .onClick(async () => {
+                                this.playerVM.setSource(repeatItem.item)
+                            })
+                        }).virtualScroll({ totalCount: this.mediaLibraryVM.mediaList.length })
+                        .key((item) => {
+                            return item.uri
+                        })
+                    ListItem().height(120)
+                }
+                .width("100%")
+                .height("100%")
+            }
+            .width("100%")
+            .layoutWeight(1)
         }
         .width("100%")
         .justifyContent(FlexAlign.Start)

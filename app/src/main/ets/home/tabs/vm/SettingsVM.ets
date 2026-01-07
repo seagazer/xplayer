@@ -1,5 +1,6 @@
 import { IVM } from '../../../base/IVM'
 import { UIConstants } from '../../../base/UIConstants'
+import { bundleManager } from '@kit.AbilityKit'
 
 /**
  *
@@ -17,10 +18,11 @@ export class SettingsVM implements IVM {
     @Trace lyricAlignLeft: boolean = false
     @Trace lyricTextSize: number = 24
     // version
-    @Trace appVersion: string = "1.0.0"
-    @Trace appActive: boolean = false
+    @Trace appVersion: string = "0.0.0"
+    @Trace appActive: boolean = true
 
     async onCreate(context: UIContext) {
+        this.appVersion = bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_WITH_APPLICATION).versionName
     }
 
     onDestroy(): void {

@@ -1,9 +1,8 @@
 import { AppStorageV2 } from '@kit.ArkUI'
-import { UIConstants } from '../../../base/UIConstants'
-import { ImageView } from '../../../base/view/ImageView'
-import { ThemeVM } from '../vm/ThemeVM'
 import { tabTitleStyle } from '../Style'
 import { MediaLibraryVM } from '../vm/MediaLibraryVM'
+import { ThemeVM } from '../vm/ThemeVM'
+import { AlbumItemView } from './AlbumItemView'
 
 /**
  *
@@ -28,7 +27,7 @@ struct TabAlbum {
             Row() {
                 Text("共" + this.mediaLibraryVM.albumList.length + "个专辑")
                     .fontSize(20)
-                    .fontColor(UIConstants.DEFAULT_TEXT_COLOR)
+                    .fontColor("#ccffffff")
             }
             .margin({ top: 24, bottom: 16 })
 
@@ -37,56 +36,27 @@ struct TabAlbum {
                     Repeat(this.mediaLibraryVM.albumList)
                         .each((repeatItem) => {
                             GridItem() {
-                                Stack() {
-                                    ImageView({
-                                        url: repeatItem.item.cover,
-                                    }).width("100%")
-                                        .height("100%")
-
-                                    Column() {
-                                        Text("共" + repeatItem.item.mediaList.length + "首歌曲")
-                                            .fontSize(16)
-                                            .fontColor(UIConstants.DEFAULT_TEXT_COLOR)
-                                            .padding(8)
-                                            .backgroundColor("#80000000")
-                                            .border({ radius: { topRight: 8, bottomLeft: 8 } })
-
-                                        Text(repeatItem.item.title)
-                                            .width("100%")
-                                            .maxLines(1)
-                                            .textOverflow({ overflow: TextOverflow.Ellipsis })
-                                            .fontSize(18)
-                                            .fontColor(UIConstants.DEFAULT_TEXT_COLOR)
-                                            .padding({ left: 12, right: 12 })
-                                            .width("100%")
-                                            .height(50)
-                                            .backgroundColor(UIConstants.DEFAULT_PRIMARY_COLOR_DARK)
-                                    }
-                                    .width("100%")
-                                    .height("100%")
-                                    .justifyContent(FlexAlign.SpaceBetween)
-                                    .alignItems(HorizontalAlign.End)
-                                }
-                                .width("100%")
-                                .height("100%")
-                                .border({ radius: 8 })
-                                .clip(true)
+                                AlbumItemView({ item: repeatItem.item })
                             }
                             .width("100%")
                             .height(300)
                             .clickEffect({ level: ClickEffectLevel.LIGHT, scale: 0.95 })
-                        }).virtualScroll({ totalCount: this.mediaLibraryVM.albumList.length })
+                        })
+                        .virtualScroll({ totalCount: this.mediaLibraryVM.albumList.length })
                         .key((item) => {
                             return item.title
                         })
-
+                    GridItem()
+                        .columnStart(0)
+                        .columnEnd(3)
+                        .height(120)
                 }
                 .width("100%")
                 .height("100%")
                 .columnsTemplate("1fr 1fr 1fr 1fr")
                 .rowsGap(24)
                 .columnsGap(24)
-                .padding({ left: 16, right: 16, bottom: 160 })
+                .padding({ left: 16, right: 16 })
             }
             .width("100%")
             .layoutWeight(1)

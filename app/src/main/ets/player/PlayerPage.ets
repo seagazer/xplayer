@@ -36,9 +36,8 @@ export struct PlayerPage {
             .setHighlightScale(1.1)
             .setTextColor(stringToHex(this.themeVM!.primaryColor))
             .setTextHighlightColor(stringToHex(this.themeVM!.primaryColorDark))
-            .setFadeColor(Color.Transparent)
             .setEmptyHint("未找到歌词")
-            .setLrcAnimDuration(200)
+            .setFadePercent(0.25)
         // todo test lyric data
         const lyric = new StringParser().parse(MockData.krc7)
         XLogger.w(TAG, JSON.stringify(lyric))

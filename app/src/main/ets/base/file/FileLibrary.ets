@@ -118,6 +118,7 @@ export class FileLibrary {
                 uri: uri,
                 duration: parseInt(duration),
                 coverUrl: coverUrl,
+                isFavourite: 0,
             }
             return item
         } catch (error) {

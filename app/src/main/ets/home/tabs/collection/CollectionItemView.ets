@@ -1,0 +1,64 @@
+import { duration2Text } from '../../../base/extensions/Extensions'
+import { MediaFile } from '../../../base/model/MediaFile'
+import { UIConstants } from '../../../base/UIConstants'
+import { ImageView } from '../../../base/view/ImageView'
+
+@ComponentV2
+export struct CollectionItemView {
+    @Require @Param index: number
+    @Require @Param item: MediaFile
+    @Require @Param primaryColor: string
+    @Require @Param isHighlight: boolean
+    @Local isHover: boolean = false
+    @Event unCollection: () => void
+
+    build() {
+        Row() {
+            Text((this.index + 1).toString())
+                .fontSize(24)
+                .width(60)
+                .textAlign(TextAlign.Center)
+                .fontColor(this.isHighlight ? this.primaryColor : "#ccffffff")
+                .fontWeight(FontWeight.Bold)
+
+            ImageView({ url: this.item.coverUrl, corner: 4 })
+                .width(40)
+                .height(40)
+            Column() {
+                Text(this.item.title)
+                    .fontSize(18)
+                    .fontColor(this.isHighlight ? this.primaryColor : "#ccffffff")
+                Text(this.item.artist)
+                    .fontSize(14)
+                    .margin({ top: 4 })
+                    .fontColor(this.isHighlight ? this.primaryColor : "#99ffffff")
+            }
+            .height("100%")
+            .margin({ left: 16 })
+            .alignItems(HorizontalAlign.Start)
+            .justifyContent(FlexAlign.Center)
+
+            Blank()
+
+            Text(duration2Text(this.item.duration))
+                .fontSize(18)
+                .fontColor(this.isHighlight ? this.primaryColor : "#ccffffff")
+
+            SymbolGlyph($r("sys.symbol.heart_slash"))
+                .fontSize(32)
+                .fontColor([this.isHighlight ? this.primaryColor : "#ccffffff"])
+                .hitTestBehavior(HitTestMode.Block)
+                .margin({ left: 16 })
+                .onClick(() => {
+                    this.unCollection?.()
+                })
+        }
+        .width("100%")
+        .height("100%")
+        .padding({ left: 16, right: 16 })
+        .border({ radius: 8, width: this.isHover ? 1 : 0, color: UIConstants.DEFAULT_PRIMARY_COLOR })
+        .onHover((hover) => {
+            this.isHover = hover
+        })
+    }
+}

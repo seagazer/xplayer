@@ -1,11 +1,10 @@
-import { MediaLibraryVM } from '../vm/MediaLibraryVM'
 import { AppStorageV2 } from '@kit.ArkUI'
-import { duration2Text } from '../../../base/extensions/Extensions'
 import { PlayerVM } from '../../../player/vm/PlayerVM'
-import { ThemeVM } from '../vm/ThemeVM'
 import { tabTitleStyle } from '../Style'
-import { ImageView } from '../../../base/view/ImageView'
+import { ListItemView } from './ListItemView'
+import { ThemeVM } from '../vm/ThemeVM'
 import { UIConstants } from '../../../base/UIConstants'
+import { MediaLibraryVM } from '../vm/MediaLibraryVM'
 
 /**
  *
@@ -40,44 +39,17 @@ struct TabLibrary {
                     Repeat(this.mediaLibraryVM.mediaList)
                         .each((repeatItem) => {
                             ListItem() {
-                                Row() {
-                                    Text((repeatItem.index + 1).toString())
-                                        .fontSize(24)
-                                        .fontColor(repeatItem.item.uri === this.playerVM.currentItem?.uri ? this.themeVM.primaryColor :
-                                            UIConstants.DEFAULT_TEXT_COLOR)
-                                        .fontWeight(FontWeight.Bold)
-                                        .padding({ left: 8, right: 16 })
-
-                                    ImageView({ url: repeatItem.item.coverUrl, corner: 4 })
-                                        .width(40)
-                                        .height(40)
-                                    Column() {
-                                        Text(repeatItem.item.title)
-                                            .fontSize(18)
-                                            .fontColor(repeatItem.item.uri === this.playerVM.currentItem?.uri ? this.themeVM.primaryColor :
-                                                UIConstants.DEFAULT_TEXT_COLOR)
-                                        Text(repeatItem.item.artist)
-                                            .fontSize(14)
-                                            .margin({ top: 4 })
-                                            .fontColor(repeatItem.item.uri === this.playerVM.currentItem?.uri ? this.themeVM.primaryColor :
-                                                "#99ffffff")
+                                ListItemView({
+                                    index: repeatItem.index,
+                                    item: repeatItem.item,
+                                    primaryColor: this.themeVM.primaryColor,
+                                    isHighlight: this.playerVM.currentItem === repeatItem.item,
+                                    onItemMenuClick: () => {
+                                        const result = repeatItem.item.isFavourite === 0 ? 1 : 0
+                                        this.mediaLibraryVM.updateFavourite(repeatItem.item, result)
                                     }
-                                    .height("100%")
-                                    .margin({ left: 16 })
-                                    .alignItems(HorizontalAlign.Start)
-                                    .justifyContent(FlexAlign.Center)
-
-                                    Blank()
-
-                                    Text(duration2Text(repeatItem.item.duration))
-                                        .fontSize(18)
-                                        .fontColor(repeatItem.item.uri === this.playerVM.currentItem?.uri ? this.themeVM.primaryColor :
-                                            UIConstants.DEFAULT_TEXT_COLOR)
-                                }
-                                .width("100%")
-                                .height("100%")
+                                })
                             }
-                            .padding({ left: 8, right: 16 })
                             .width("100%")
                             .height(56)
                             .clickEffect({ level: ClickEffectLevel.LIGHT, scale: 0.95 })

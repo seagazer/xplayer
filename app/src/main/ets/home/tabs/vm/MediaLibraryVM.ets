@@ -16,6 +16,7 @@ export class MediaLibraryVM implements IVM {
     @Trace isEmpty: boolean = true
     @Trace mediaList: MediaFile[] = []
     @Trace albumList: Album[] = []
+    @Trace favouriteList: MediaFile[] = []
     private table?: Table<MediaFile> = undefined
 
     async onCreate(context: UIContext) {
@@ -86,4 +87,22 @@ export class MediaLibraryVM implements IVM {
     async get() {
         return await this.table?.queryAll()
     }
+
+    async updateFavourite(item: MediaFile, result: 0 | 1) {
+        if (this.table === undefined) {
+            XLogger.e(TAG, "the table is not created")
+            return
+        }
+        if (result === 1) {
+            this.favouriteList.push(item)
+        } else {
+            const index = this.favouriteList.indexOf(item)
+            if (index >= 0) {
+                this.favouriteList.splice(index, 1)
+            }
+        }
+        item.isFavourite = result
+        await this.table.update("uri", item)
+    }
+
 }
