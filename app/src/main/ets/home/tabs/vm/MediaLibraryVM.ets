@@ -28,7 +28,7 @@ export class MediaLibraryVM implements IVM {
         this.table.addColumn("uri", ColumnValueType.STRING)
         this.table.addColumn("duration", ColumnValueType.NUMBER)
         this.table.addColumn("coverUrl", ColumnValueType.STRING)
-        this.table.addColumn("isFavourite", ColumnValueType.NUMBER)
+        this.table.addColumn("collection", ColumnValueType.NUMBER)
         await DbHelper.getInstance().createTable(this.table)
         const cache = await this.get()
         if (cache != undefined && cache.length > 0) {
@@ -41,7 +41,7 @@ export class MediaLibraryVM implements IVM {
     private generateAlbum(list: MediaFile[]) {
         for (let i = 0; i < list.length; i++) {
             const mediaItem = list[i]
-            if (mediaItem.isFavourite === 1) {
+            if (mediaItem.collection === 1) {
                 this.favouriteList.push(mediaItem)
             }
             let albumName = mediaItem.album
@@ -108,7 +108,7 @@ export class MediaLibraryVM implements IVM {
                 this.favouriteList.splice(index, 1)
             }
         }
-        item.isFavourite = result
+        item.collection = result
         await this.table.update("uri", item)
     }
 }

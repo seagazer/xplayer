@@ -10,7 +10,7 @@ export interface MediaFile {
     uri: string,
     duration: number,
     coverUrl: string | undefined,
-    isFavourite: 0 | 1
+    collection: 0 | 1
 }
 
 

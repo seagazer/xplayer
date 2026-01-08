@@ -65,7 +65,7 @@ export struct ListItemView {
 
     @Builder
     menu(item: MediaFile) {
-        Text(item.isFavourite ? "取消收藏" : "添加收藏")
+        Text(item.collection ? "取消收藏" : "添加收藏")
             .fontSize(16)
             .padding(8)
             .backgroundColor(Color.White)
