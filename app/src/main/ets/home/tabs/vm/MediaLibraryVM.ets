@@ -110,4 +110,30 @@ export class MediaLibraryVM implements IVM {
         item.collection = result
         await this.table.update("uri", item)
     }
+
+    getPre(current?: MediaFile) {
+        if (current === undefined) {
+            return this.mediaList[0]
+        }
+        let index = this.mediaList.indexOf(current)
+        if (index > 0) {
+            index--
+        } else {
+            index = this.mediaList.length - 1
+        }
+        return this.mediaList[index]
+    }
+
+    getNext(current?: MediaFile) {
+        if (current === undefined) {
+            return this.mediaList[0]
+        }
+        let index = this.mediaList.indexOf(current)
+        if (index > this.mediaList.length - 1) {
+            index = 0
+        } else {
+            index++
+        }
+        return this.mediaList[index]
+    }
 }

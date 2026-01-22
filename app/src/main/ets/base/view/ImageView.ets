@@ -12,15 +12,20 @@ export struct ImageView {
     @Param shadowValue?: ShadowOptions | ShadowStyle = undefined
     @Local pixel?: PixelMap | Resource = undefined
 
+    @Monitor("url")
+    onImageChanged() {
+        this.loadImage()
+    }
+
     aboutToAppear(): void {
+        this.loadImage()
+    }
+
+    private loadImage() {
         ImageLoader.get(this.getUIContext().getHostContext()!).loadImage(this.url)
             .then((result) => {
                 this.pixel = result
             })
-    }
-
-    aboutToDisappear(): void {
-        ImageLoader.get(this.getUIContext().getHostContext()!).release(this.url)
     }
 
     build() {

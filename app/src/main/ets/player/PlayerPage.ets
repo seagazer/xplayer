@@ -70,35 +70,37 @@ export struct PlayerPage {
                         ImageView({ url: this.playerVM.coverUrl, corner: 16 })
                             .width(240)
                             .height(240)
-                        Text(this.playerVM.mediaTitle)
+                        Text("  " + this.playerVM.mediaTitle + "  ")
+                            .textAlign(TextAlign.Center)
                             .fontColor(this.themeVM?.primaryColor)
                             .fontSize(24)
-                            .fontWeight(FontWeight.Bold)
                             .maxLines(1)
                             .textOverflow({ overflow: TextOverflow.MARQUEE })
                             .textShadow({
                                 radius: 8,
-                                color: "#ff000000",
+                                color: "#80000000",
                                 type: ShadowType.BLUR,
                                 offsetX: 4,
                                 offsetY: 4
                             })
-                            .clip(false)
+                            .fontWeight(FontWeight.Bold)
                             .margin({ top: 24 })
-                        Text(this.playerVM.mediaArtist)
+                            .padding({ left: 32, right: 32 })
+                        Text("  " + this.playerVM.mediaArtist + "  ")
+                            .textAlign(TextAlign.Center)
                             .fontColor(this.themeVM?.primaryColor)
                             .fontSize(18)
                             .maxLines(1)
                             .textOverflow({ overflow: TextOverflow.MARQUEE })
                             .textShadow({
                                 radius: 8,
-                                color: "#ff000000",
+                                color: "#80000000",
                                 type: ShadowType.BLUR,
                                 offsetX: 4,
                                 offsetY: 4
                             })
-                            .clip(false)
                             .margin({ top: 16 })
+                            .padding({ left: 32, right: 32 })
                     }
                     .layoutWeight(1)
                     .height("100%")
@@ -127,7 +129,6 @@ export struct PlayerPage {
                 .transition(TransitionEffect.OPACITY.combine(TransitionEffect.translate({ y: 40 })).animation({ delay: 100 }))
 
                 Column() {
-                    // TODO seek bar
                     Slider({
                         style: SliderStyle.OutSet,
                         max: this.playerVM.duration,
@@ -163,6 +164,8 @@ export struct PlayerPage {
                                 .margin({ left: 16 })
                                 .transition(TransitionEffect.OPACITY)
                                 .onClick(() => {
+                                    const pre = this.mediaLibraryVM.getPre(this.playerVM.currentItem)
+                                    this.playerVM.setSource(pre)
                                 })
 
                             SymbolGlyph($r("sys.symbol.forward_end_fill"))
@@ -173,6 +176,8 @@ export struct PlayerPage {
                                 .margin({ left: 16 })
                                 .transition(TransitionEffect.OPACITY)
                                 .onClick(() => {
+                                    const next = this.mediaLibraryVM.getNext(this.playerVM.currentItem)
+                                    this.playerVM.setSource(next)
                                 })
                         }
 
