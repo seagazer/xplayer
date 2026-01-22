@@ -55,7 +55,6 @@ export struct HomePage {
                                 icon: item.icon,
                                 title: item.title,
                                 isSelected: this.selectedTabIndex === item.index,
-                                theme: this.themeVM
                             }).onClick(() => {
                                 this.selectedTabIndex = item.index
                                 this.tabsController.changeIndex(item.index)

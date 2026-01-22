@@ -42,7 +42,6 @@ struct TabLibrary {
                                 ListItemView({
                                     index: repeatItem.index,
                                     item: repeatItem.item,
-                                    primaryColor: this.themeVM.primaryColor,
                                     isHighlight: this.playerVM.currentItem === repeatItem.item,
                                     onItemMenuClick: () => {
                                         const result = repeatItem.item.collection === 0 ? 1 : 0

@@ -30,10 +30,10 @@ export class MediaLibraryVM implements IVM {
         this.table.addColumn("coverUrl", ColumnValueType.STRING)
         this.table.addColumn("collection", ColumnValueType.NUMBER)
         await DbHelper.getInstance().createTable(this.table)
-        const cache = await this.get()
+        const cache = await this.getCache()
         if (cache != undefined && cache.length > 0) {
             this.mediaList = cache
-            this.isEmpty = cache.length > 0
+            this.isEmpty = cache.length <= 0
             this.generateAlbum(cache)
         }
     }
@@ -77,12 +77,11 @@ export class MediaLibraryVM implements IVM {
     }
 
     onDestroy(): void {
-
     }
 
     async add(list: MediaFile[]) {
         this.mediaList.push(...list)
-        this.isEmpty = this.mediaList.length > 0
+        this.isEmpty = this.mediaList.length <= 0
         this.generateAlbum(list)
         if (this.table === undefined) {
             XLogger.e(TAG, "the table is not created")
@@ -91,7 +90,7 @@ export class MediaLibraryVM implements IVM {
         await this.table.insertArray(list)
     }
 
-    async get() {
+    private async getCache() {
         return await this.table?.queryAll()
     }
 

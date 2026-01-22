@@ -1,4 +1,4 @@
-import { ThemeVM } from "../tabs/vm/ThemeVM"
+import { UIConstants } from '../../base/UIConstants'
 
 /**
  *
@@ -11,7 +11,6 @@ export struct TabItemView {
     @Require @Param icon: Resource
     @Require @Param title: ResourceStr
     @Param isSelected: boolean = false
-    @Require @Param theme: ThemeVM
 
     build() {
         Row() {
@@ -28,7 +27,7 @@ export struct TabItemView {
         .height(48)
         .padding({ left: 16, right: 16 })
         .border({ radius: 8 })
-        .backgroundColor(this.isSelected ? this.theme.primaryColorDark : Color.Transparent)
+        .backgroundColor(this.isSelected ? UIConstants.DEFAULT_PRIMARY_COLOR_DARK : Color.Transparent)
         .hoverEffect(HoverEffect.Highlight)
         .clickEffect({ level: ClickEffectLevel.MIDDLE })
     }

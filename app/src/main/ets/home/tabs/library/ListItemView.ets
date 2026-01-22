@@ -7,7 +7,6 @@ import { ImageView } from '../../../base/view/ImageView'
 export struct ListItemView {
     @Require @Param index: number
     @Require @Param item: MediaFile
-    @Require @Param primaryColor: string
     @Require @Param isHighlight: boolean
     @Local isHover: boolean = false
     @Event onItemMenuClick: () => void
@@ -18,7 +17,7 @@ export struct ListItemView {
                 .fontSize(24)
                 .width(60)
                 .textAlign(TextAlign.Center)
-                .fontColor(this.isHighlight ? this.primaryColor : "#ccffffff")
+                .fontColor(this.isHighlight ? UIConstants.DEFAULT_PRIMARY_COLOR : "#ccffffff")
                 .fontWeight(FontWeight.Bold)
 
             ImageView({ url: this.item.coverUrl, corner: 4 })
@@ -27,11 +26,11 @@ export struct ListItemView {
             Column() {
                 Text(this.item.title)
                     .fontSize(18)
-                    .fontColor(this.isHighlight ? this.primaryColor : "#ccffffff")
+                    .fontColor(this.isHighlight ? UIConstants.DEFAULT_PRIMARY_COLOR : "#ccffffff")
                 Text(this.item.artist)
                     .fontSize(14)
                     .margin({ top: 4 })
-                    .fontColor(this.isHighlight ? this.primaryColor : "#99ffffff")
+                    .fontColor(this.isHighlight ? UIConstants.DEFAULT_PRIMARY_COLOR : "#99ffffff")
             }
             .height("100%")
             .margin({ left: 16 })
@@ -42,11 +41,11 @@ export struct ListItemView {
 
             Text(duration2Text(this.item.duration))
                 .fontSize(18)
-                .fontColor(this.isHighlight ? this.primaryColor : "#ccffffff")
+                .fontColor(this.isHighlight ? UIConstants.DEFAULT_PRIMARY_COLOR : "#ccffffff")
 
             SymbolGlyph($r("sys.symbol.dot_grid_1x2"))
                 .fontSize(32)
-                .fontColor([this.isHighlight ? this.primaryColor : "#ccffffff"])
+                .fontColor([this.isHighlight ? UIConstants.DEFAULT_PRIMARY_COLOR : "#ccffffff"])
                 .hitTestBehavior(HitTestMode.Block)
                 .bindContextMenu(this.menu(this.item), ResponseType.LongPress, {
                     borderRadius: 2,
