@@ -1,13 +1,14 @@
 import { ThemeVM } from '../home/tabs/vm/ThemeVM'
 import { AppStorageV2 } from '@kit.ArkUI'
 import { duration2Text, stringToHex } from '../base/extensions/Extensions'
-import { CcLyricController, CcLyricView } from '@seagazer/cclyric'
-import { MockData, StringParser } from '../mock/MockData'
+import { AlignMode, CcLyricController, CcLyricView } from '@seagazer/cclyric'
 import { XLogger } from '../base/extensions/XLogger'
 import { PlayerVM } from './vm/PlayerVM'
 import { MediaLibraryVM } from '../home/tabs/vm/MediaLibraryVM'
 import { ImageView } from '../base/view/ImageView'
 import { UIConstants } from '../base/UIConstants'
+import { LyricParser } from '../base/LyricParser'
+import { MediaFile } from '../base/model/MediaFile'
 
 const TAG = "[PlayerPage]"
 
@@ -24,10 +25,30 @@ export struct PlayerPage {
     @Local gradientRadius: number = 0
     private lrcController = new CcLyricController()
     private navPath = new NavPathStack()
+    private parser = new LyricParser()
 
     @Monitor("playerVM.playerProgress")
     onProgressChanged() {
         this.lrcController.updatePosition(this.playerVM.playerProgress)
+    }
+
+    @Monitor("playerVM.currentItem")
+    onMediaChanged() {
+        const playingItem = this.playerVM.currentItem
+        if (playingItem !== undefined) {
+            this.changeLyric(playingItem)
+        }
+    }
+
+    private changeLyric(playingItem: MediaFile) {
+        const title = playingItem.title
+        const uri = playingItem.uri
+        const index = uri.lastIndexOf("/")
+        XLogger.w(TAG, "uri= " + uri)
+        const lyricUri = uri.substring(0, index) + "/" + title + ".lrc"
+        XLogger.w(TAG, "lyric uri= " + lyricUri)
+        const lyric = this.parser.parseFile(lyricUri)
+        this.lrcController.setLyric(lyric)
     }
 
     aboutToAppear(): void {
@@ -35,14 +56,15 @@ export struct PlayerPage {
             .setLineSpace(12)
             .setTextSize(22)
             .setHighlightScale(1.1)
+            .setKrcTextBgColor(0xccc6ba75)
             .setTextColor(stringToHex(this.themeVM!.primaryColor))
             .setTextHighlightColor(stringToHex(this.themeVM!.primaryColorDark))
             .setEmptyHint("未找到歌词")
             .setFadePercent(0.25)
-        // todo test lyric data
-        const lyric = new StringParser().parse(MockData.krc7)
-        XLogger.w(TAG, JSON.stringify(lyric))
-        this.lrcController.setLyric(lyric)
+            .setAlignMode(AlignMode.START)
+        if (this.playerVM.currentItem !== undefined) {
+            this.changeLyric(this.playerVM.currentItem)
+        }
     }
 
     build() {

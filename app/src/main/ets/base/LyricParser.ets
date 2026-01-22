@@ -11,7 +11,7 @@ const TAG = "[LyricParser]"
  * Author: Seagazer
  * Date: 2026/1/22
  */
-class LyricParser {
+export class LyricParser {
     parseFile(filePath: string): Lrc | undefined {
         filePath = encodeURI(filePath).replace("%EF%BB%BF", "")
         let fd = -1
@@ -98,7 +98,7 @@ class LyricParser {
             }
             // 提取字符（索引2,4,6...）
             for (let i = 2; i < parts.length; i += 2) {
-                const char = parts[i].trim();
+                const char = parts[i];
                 if (char) {
                     chars.push(char);
                 }

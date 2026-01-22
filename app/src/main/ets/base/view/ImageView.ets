@@ -26,6 +26,9 @@ export struct ImageView {
             .then((result) => {
                 this.pixel = result
             })
+            .catch(() => {
+                this.pixel = $r("app.media.cover")
+            })
     }
 
     build() {
