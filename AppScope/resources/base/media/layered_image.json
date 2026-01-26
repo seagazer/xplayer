@@ -1,7 +1,7 @@
 {
   "layered-image":
   {
-    "background" : "$media:foreground",
-    "foreground" : "$media:foreground"
+    "background" : "$media:ic_launcher",
+    "foreground" : "$media:ic_launcher"
   }
 }
