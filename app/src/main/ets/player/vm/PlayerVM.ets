@@ -8,6 +8,7 @@ import { ThemeVM } from '../../home/tabs/vm/ThemeVM'
 import { SettingsVM } from '../../home/tabs/vm/SettingsVM'
 import { AppStorageV2 } from '@kit.ArkUI'
 import { UIConstants } from '../../base/UIConstants'
+import { VMProvider } from '../../VMProvider'
 
 
 const TAG = "[PlayerVM]"
@@ -51,6 +52,9 @@ export class PlayerVM implements IVM {
         this.userProgress = position
         this.playerProgress = position
     }
+    private themeVM?: ThemeVM
+    private settingsVM?: SettingsVM
+
     async onCreate(context: UIContext) {
         this.context = context
         this.player = new CcPlayer(context.getHostContext()!)
@@ -74,9 +78,6 @@ export class PlayerVM implements IVM {
         this.player?.release()
     }
 
-    private themeVM: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
-    private settingsVM: SettingsVM = AppStorageV2.connect<SettingsVM>(SettingsVM, () => new SettingsVM())!
-
     async setSource(mediaFile: MediaFile, autoPlay: boolean = true) {
         this.mediaTitle = mediaFile.title
         this.mediaArtist = mediaFile.artist
@@ -90,9 +91,15 @@ export class PlayerVM implements IVM {
             }
         })
         // update theme
+        if (this.settingsVM === undefined) {
+            this.settingsVM = VMProvider.get().getVM("SettingsVM") as SettingsVM
+        }
         XLogger.w(TAG, "auto theme= " + this.settingsVM.autoMainTheme)
         if (this.settingsVM.autoMainTheme) {
             let pixelmap = await ImageLoader.get(this.context!.getHostContext()!).loadImage(mediaFile.coverUrl)
+            if (this.themeVM === undefined) {
+                this.themeVM = VMProvider.get().getVM("ThemeVM") as ThemeVM
+            }
             this.themeVM.updateByPixelmap(pixelmap)
         }
     }

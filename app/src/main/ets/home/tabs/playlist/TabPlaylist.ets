@@ -1,6 +1,6 @@
-import { AppStorageV2 } from '@kit.ArkUI'
 import { ThemeVM } from '../vm/ThemeVM'
 import { tabTitleStyle } from '../Style'
+import { VMProvider } from '../../../VMProvider'
 
 /**
  *
@@ -14,7 +14,7 @@ export function TabPlaylistView() {
 
 @ComponentV2
 struct TabPlaylist {
-    private themeVM: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
+    private themeVM: ThemeVM = VMProvider.get().getVM("ThemeVM") as ThemeVM
 
     build() {
         Column() {

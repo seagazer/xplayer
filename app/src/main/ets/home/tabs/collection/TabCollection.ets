@@ -1,5 +1,7 @@
 import { AppStorageV2 } from '@kit.ArkUI'
+import { clickStyle } from '../../../base/Styles'
 import { PlayerVM } from '../../../player/vm/PlayerVM'
+import { VMProvider } from '../../../VMProvider'
 import { tabTitleStyle } from '../Style'
 import { MediaLibraryVM } from '../vm/MediaLibraryVM'
 import { ThemeVM } from '../vm/ThemeVM'
@@ -17,9 +19,9 @@ export function TabCollectionView() {
 
 @ComponentV2
 struct TabCollection {
-    private mediaLibraryVM: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
-    private playerVM: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
-    private themeVM: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
+    private mediaLibraryVM: MediaLibraryVM = VMProvider.get().getVM("MediaLibraryVM") as MediaLibraryVM
+    private playerVM: PlayerVM = VMProvider.get().getVM("PlayerVM") as PlayerVM
+    private themeVM: ThemeVM = VMProvider.get().getVM("ThemeVM") as ThemeVM
 
     build() {
         Column() {
@@ -50,7 +52,7 @@ struct TabCollection {
                             }
                             .width("100%")
                             .height(56)
-                            .clickEffect({ level: ClickEffectLevel.LIGHT, scale: 0.95 })
+                            .clickEffect(clickStyle)
                             .border({ radius: 4 })
                             .backgroundColor(repeatItem.item.uri === this.playerVM.currentItem?.uri ? "#33ffffff" : Color.Transparent)
                             .onClick(async () => {

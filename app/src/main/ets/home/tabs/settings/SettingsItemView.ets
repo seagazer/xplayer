@@ -1,3 +1,4 @@
+import { clickStyle } from '../../../base/Styles'
 import { UIConstants } from '../../../base/UIConstants'
 import { ThemeVM } from '../vm/ThemeVM'
 
@@ -65,7 +66,7 @@ export struct SettingsButtonItem {
                 .constraintSize({ minWidth: 100 })
                 .border({ radius: 4 })
                 .backgroundColor("#80ffffff")
-                .clickEffect({ level: ClickEffectLevel.MIDDLE, scale: 0.95 })
+                .clickEffect(clickStyle)
                 .onClick(() => {
                     this.onAction?.()
                 })

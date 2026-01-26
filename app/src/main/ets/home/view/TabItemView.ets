@@ -1,3 +1,4 @@
+import { clickStyle } from '../../base/Styles'
 import { UIConstants } from '../../base/UIConstants'
 
 /**
@@ -29,7 +30,7 @@ export struct TabItemView {
         .border({ radius: 8 })
         .backgroundColor(this.isSelected ? UIConstants.DEFAULT_PRIMARY_COLOR_DARK : Color.Transparent)
         .hoverEffect(HoverEffect.Highlight)
-        .clickEffect({ level: ClickEffectLevel.MIDDLE })
+        .clickEffect(clickStyle)
     }
 }
 

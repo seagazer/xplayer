@@ -1,4 +1,5 @@
-import { AppStorageV2 } from '@kit.ArkUI'
+import { clickStyle } from '../../../base/Styles'
+import { VMProvider } from '../../../VMProvider'
 import { tabTitleStyle } from '../Style'
 import { MediaLibraryVM } from '../vm/MediaLibraryVM'
 import { ThemeVM } from '../vm/ThemeVM'
@@ -16,8 +17,8 @@ export function TabAlbumView() {
 
 @ComponentV2
 struct TabAlbum {
-    private themeVM: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
-    private mediaLibraryVM: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
+    private themeVM: ThemeVM = VMProvider.get().getVM("ThemeVM") as ThemeVM
+    private mediaLibraryVM: MediaLibraryVM = VMProvider.get().getVM("MediaLibraryVM") as MediaLibraryVM
 
     build() {
         Column() {
@@ -40,7 +41,7 @@ struct TabAlbum {
                             }
                             .width("100%")
                             .height(300)
-                            .clickEffect({ level: ClickEffectLevel.LIGHT, scale: 0.95 })
+                            .clickEffect(clickStyle)
                         })
                         .virtualScroll({ totalCount: this.mediaLibraryVM.albumList.length })
                         .key((item) => {

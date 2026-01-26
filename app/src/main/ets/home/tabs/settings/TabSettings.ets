@@ -1,12 +1,15 @@
 import { FileLibrary } from '../../../base/file/FileLibrary'
 import { MediaLibraryVM } from '../vm/MediaLibraryVM'
-import { AppStorageV2, ComponentContent } from '@kit.ArkUI'
+import { ComponentContent } from '@kit.ArkUI'
 import { ThemeVM } from '../vm/ThemeVM'
 import { SettingsVM } from '../vm/SettingsVM'
 import { SettingsButtonItem, SettingsCategory, SettingsSwitchItem, SettingsTextItem } from './SettingsItemView'
 import { tabTitleStyle } from '../Style'
 import { ImageLoader } from '../../../base/http/ImageLoader'
 import { PlayerVM } from '../../../player/vm/PlayerVM'
+import { ActiveDialog, ActiveParam } from '../../dialog/Dialog'
+import { clickStyle } from '../../../base/Styles'
+import { VMProvider } from '../../../VMProvider'
 
 
 const TAG = "[TabSettings]"
@@ -23,10 +26,10 @@ export function TabSettingsView() {
 
 @ComponentV2
 struct TabSettings {
-    private mediaLibraryVM: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
-    private playerVM: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
-    private themeVM: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
-    private settingsVM: SettingsVM = AppStorageV2.connect<SettingsVM>(SettingsVM, () => new SettingsVM())!
+    private mediaLibraryVM: MediaLibraryVM = VMProvider.get().getVM("MediaLibraryVM") as MediaLibraryVM
+    private playerVM: PlayerVM = VMProvider.get().getVM("PlayerVM") as PlayerVM
+    private themeVM: ThemeVM = VMProvider.get().getVM("ThemeVM") as ThemeVM
+    private settingsVM: SettingsVM = VMProvider.get().getVM("SettingsVM") as SettingsVM
 
     build() {
         Column() {
@@ -60,14 +63,16 @@ struct TabSettings {
                             .selectedColor(this.themeVM.primaryColor)
                             .width(50)
                             .height(24)
-                            .onChange((isOn)=>{
+                            .onChange((isOn) => {
                                 if (isOn) {
                                     ImageLoader.get(this.getUIContext().getHostContext()!).loadImage(this.playerVM.coverUrl)
                                         .then((result) => {
                                             this.themeVM.updateByPixelmap(result)
                                         })
+                                    this.settingsVM.autoMainTheme = true
                                 } else {
                                     this.themeVM.reset()
+                                    this.settingsVM.autoMainTheme = false
                                 }
                             })
                     }
@@ -75,6 +80,7 @@ struct TabSettings {
                     .padding({ left: 16 })
                     .justifyContent(FlexAlign.SpaceBetween)
                     .margin({ top: 16 })
+
                     // SettingsSwitchItem({
                     //     title: "动态主题色",
                     //     theme: this.theme,
@@ -95,8 +101,20 @@ struct TabSettings {
                     // lyric
                     SettingsCategory({ title: "歌词" })
                         .margin({ top: 24 })
-                    SettingsSwitchItem({ title: "左对齐", theme: this.themeVM, })
-                        .margin({ top: 16 })
+                    Row() {
+                        Text("左对齐")
+                            .fontSize(16)
+                            .fontColor(Color.White)
+                        Toggle({ type: ToggleType.Switch, isOn: $$this.settingsVM.lyricAlignLeft })
+                            .selectedColor(this.themeVM.primaryColor)
+                            .width(50)
+                            .height(24)
+                    }
+                    .width("100%")
+                    .padding({ left: 16 })
+                    .justifyContent(FlexAlign.SpaceBetween)
+                    .margin({ top: 16 })
+
                     SettingsSwitchItem({ title: "自动下载歌词", theme: this.themeVM, })
                         .margin({ top: 16 })
                     SettingsButtonItem({
@@ -111,11 +129,39 @@ struct TabSettings {
                         .margin({ top: 24 })
                     SettingsTextItem({ title: "当前版本", value: this.settingsVM.appVersion })
                         .margin({ top: 16 })
-                    SettingsButtonItem({
-                        title: "激活状态", button: "激活", onAction: () => {
-                            this.openActiveDialog()
+
+                    Row() {
+                        Text("激活状态")
+                            .fontSize(18)
+                            .fontColor(Color.White)
+                        if (!this.settingsVM.appActive) {
+                            Text("激活")
+                                .fontSize(18)
+                                .fontColor(Color.White)
+                                .textAlign(TextAlign.Center)
+                                .padding({
+                                    left: 16,
+                                    right: 16,
+                                    top: 8,
+                                    bottom: 8
+                                })
+                                .constraintSize({ minWidth: 100 })
+                                .border({ radius: 4 })
+                                .backgroundColor("#80ffffff")
+                                .clickEffect(clickStyle)
+                                .onClick(() => {
+                                    this.openActiveDialog()
+                                })
+                        } else {
+                            Text("已激活")
+                                .fontSize(18)
+                                .fontColor(Color.White)
                         }
-                    }).margin({ top: 16 })
+                    }
+                    .width("100%")
+                    .padding({ left: 16 })
+                    .margin({ top: 16 })
+                    .justifyContent(FlexAlign.SpaceBetween)
 
                     Blank().height(100)
                 }
@@ -143,46 +189,24 @@ struct TabSettings {
         }
     }
 
+    private aActiveDialog?: ComponentContent<ActiveParam> = undefined
+
     private openActiveDialog() {
         const param = new ActiveParam((input) => {
             if (input === "12345") {
                 this.settingsVM.appActive = true
+                this.getUIContext().getPromptAction().closeCustomDialog(this.aActiveDialog).catch(() => {
+                    // TODO: Implement error handling.
+                })
             }
         })
-        const content = new ComponentContent(this.getUIContext(), wrapBuilder(ActiveDialog), param)
-        this.getUIContext().getPromptAction().openCustomDialog<ActiveParam>(content).catch(() => {
+        if (this.aActiveDialog === undefined) {
+            this.aActiveDialog = new ComponentContent(this.getUIContext(), wrapBuilder(ActiveDialog), param)
+        }
+        this.getUIContext().getPromptAction().openCustomDialog<ActiveParam>(this.aActiveDialog).catch(() => {
             // TODO: Implement error handling.
         })
     }
 }
 
 
-@Builder
-function ActiveDialog(param: ActiveParam) {
-    Column({ space: 16 }) {
-        TextInput()
-            .type(InputType.Number)
-            .border({ width: 1 })
-            .onChange((input) => {
-                param.input = input
-            })
-        Button("确认")
-            .onClick(() => {
-                param.onConfirm(param.input)
-            })
-    }
-    .width(300)
-    .height(200)
-    .backgroundColor(Color.White)
-    .border({ radius: 16 })
-    .justifyContent(FlexAlign.Center)
-}
-
-class ActiveParam {
-    input: string = ""
-    onConfirm: (input: string) => void
-
-    constructor(onConfirm: (input: string) => void) {
-        this.onConfirm = onConfirm
-    }
-}

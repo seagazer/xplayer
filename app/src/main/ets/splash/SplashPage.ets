@@ -1,13 +1,9 @@
-import { PlayerVM } from '../player/vm/PlayerVM'
-import { MediaLibraryVM } from '../home/tabs/vm/MediaLibraryVM'
-import { SettingsVM } from '../home/tabs/vm/SettingsVM'
-import { ThemeVM } from '../home/tabs/vm/ThemeVM'
-import { AppStorageV2, window } from '@kit.ArkUI'
 import { XLogger } from '../base/extensions/XLogger'
 import { common } from '@kit.AbilityKit'
 import { RouterConstants } from '../base/Router'
 import { DbHelper } from '../base/db/DbHelper'
 import { UIConstants } from '../base/UIConstants'
+import { VMProvider } from '../VMProvider'
 
 const TAG = "[Splash]"
 
@@ -21,10 +17,6 @@ export struct SplashPage {
     private navPathStack = new NavPathStack()
     private appName: string[] = ["L", "i", "s", "t", "e", "n"]
     @Local alpha: number[] = [0, 0, 0, 0, 0, 0]
-    private themeVM: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
-    private playerVM: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
-    private settingsVM: SettingsVM = AppStorageV2.connect<SettingsVM>(SettingsVM, () => new SettingsVM())!
-    private mediaLibraryVM: MediaLibraryVM = AppStorageV2.connect<MediaLibraryVM>(MediaLibraryVM, () => new MediaLibraryVM())!
 
     build() {
         NavDestination() {
@@ -70,16 +62,7 @@ export struct SplashPage {
         try {
             const context = this.getUIContext().getHostContext() as common.UIAbilityContext
             await DbHelper.getInstance().createDb(context, "listen")
-            const win = context.windowStage.getMainWindowSync()
-            const area = win.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM)
-            const statusHeight = area.topRect.height
-            const navigationHeight = area.bottomRect.height
-            this.themeVM.rootPaddingTop = this.getUIContext().px2vp(statusHeight) + 16
-            this.themeVM.rootPaddingBottom = this.getUIContext().px2vp(navigationHeight) + 16
-            await this.themeVM.onCreate(this.getUIContext())
-            await this.playerVM.onCreate(this.getUIContext())
-            await this.mediaLibraryVM.onCreate(this.getUIContext())
-            await this.settingsVM.onCreate(this.getUIContext())
+            VMProvider.get().onCreate(this.getUIContext())
             this.onAppReady()
         } catch (e) {
             XLogger.e(TAG, "init app error= " + JSON.stringify(e))

@@ -1,6 +1,9 @@
 import { IVM } from '../../../base/IVM'
 import { UIConstants } from '../../../base/UIConstants'
 import { bundleManager } from '@kit.AbilityKit'
+import { VMProvider } from '../../../VMProvider'
+import { LyricVM } from '../../../player/vm/LyricVM'
+import { AlignMode } from '@seagazer/cclyric'
 
 /**
  *
@@ -19,7 +22,7 @@ export class SettingsVM implements IVM {
     @Trace lyricTextSize: number = 24
     // version
     @Trace appVersion: string = "0.0.0"
-    @Trace appActive: boolean = true
+    @Trace appActive: boolean = false
 
     async onCreate(context: UIContext) {
         this.appVersion = bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_WITH_APPLICATION).versionName
@@ -27,5 +30,11 @@ export class SettingsVM implements IVM {
 
     onDestroy(): void {
 
+    }
+
+    @Monitor("lyricAlignLeft")
+    onLyricChanged() {
+        const lyricVm = VMProvider.get().getVM("LyricVM") as LyricVM
+        lyricVm.controller.setAlignMode(this.lyricAlignLeft ? AlignMode.START : AlignMode.CENTER)
     }
 }

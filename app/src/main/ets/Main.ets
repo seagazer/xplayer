@@ -1,12 +1,12 @@
 import { SettingsVM } from './home/tabs/vm/SettingsVM';
-import { AppStorageV2 } from '@kit.ArkUI';
+import { AppStorageV2, PersistenceV2 } from '@kit.ArkUI';
 import { RouterConstants, RouterMapper } from './base/Router';
 
 @Entry
 @ComponentV2
 struct Index {
     private navPathStack = new NavPathStack()
-    private settingsVM: SettingsVM = AppStorageV2.connect<SettingsVM>(SettingsVM, () => new SettingsVM())!
+    private settingsVM: SettingsVM = PersistenceV2.connect<SettingsVM>(SettingsVM, () => new SettingsVM())!
 
     aboutToAppear(): void {
         this.navPathStack.replacePath({ name: RouterConstants.SPLASH }, false)

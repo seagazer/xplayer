@@ -1,4 +1,5 @@
 import { duration2Text } from '../../base/extensions/Extensions'
+import { clickStyle } from '../../base/Styles'
 import { UIConstants } from '../../base/UIConstants'
 import { ImageView } from '../../base/view/ImageView'
 
@@ -20,7 +21,7 @@ export struct FloatControllerView {
     @Event onPlayButtonClick: () => void
     @Event onContainerClick: () => void
     @Local fadeAnimFlag: boolean = false
-    private clickCount = 1
+    private clickCount = 0
 
     @Monitor("cover")
     onCoverChanged() {
@@ -76,12 +77,12 @@ export struct FloatControllerView {
                     .fontColor([this.primaryColor])
                     .fontSize(32)
                     .symbolEffect(new ReplaceSymbolEffect(EffectScope.LAYER), this.clickCount)
-                    .clickEffect({ level: ClickEffectLevel.HEAVY, scale: 0.8 })
+                    .clickEffect(clickStyle)
                     .hoverEffect(HoverEffect.Highlight)
                     .margin({ right: 16 })
                     .onClick(() => {
-                        this.clickCount++
                         this.onPlayButtonClick?.()
+                        this.clickCount++
                     })
 
                 Text() {

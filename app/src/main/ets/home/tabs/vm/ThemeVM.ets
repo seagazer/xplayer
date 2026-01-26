@@ -2,6 +2,8 @@ import { animate } from '../../../base/extensions/Extensions'
 import { IVM } from '../../../base/IVM'
 import { UIConstants } from '../../../base/UIConstants'
 import { Palette } from '../../../base/view/Palette'
+import { common } from '@kit.AbilityKit'
+import { window } from '@kit.ArkUI'
 
 /**
  *
@@ -21,6 +23,15 @@ export class ThemeVM implements IVM {
 
     async onCreate(context: UIContext) {
         this.context = context
+        try {
+            const win = (context.getHostContext() as common.UIAbilityContext).windowStage.getMainWindowSync()
+            const area = win.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM)
+            const statusHeight = area.topRect.height
+            const navigationHeight = area.bottomRect.height
+            this.rootPaddingTop = context.px2vp(statusHeight) + 16
+            this.rootPaddingBottom = context.px2vp(navigationHeight) + 16
+        } catch (error) {
+        }
     }
 
     onDestroy(): void {

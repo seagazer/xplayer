@@ -1,5 +1,4 @@
 import { ThemeVM } from './tabs/vm/ThemeVM'
-import { AppStorageV2 } from '@kit.ArkUI'
 import { FloatControllerView } from './view/FloatControllerView'
 import { PlayerVM } from '../player/vm/PlayerVM'
 import { TabItemView } from './view/TabItemView'
@@ -7,6 +6,7 @@ import { RouterConstants } from '../base/Router'
 import { TabConfig, TabItem } from './TabConfig'
 import { UIConstants } from '../base/UIConstants'
 import { PlayingAnimation } from '../base/view/PlayingAnimation'
+import { VMProvider } from '../VMProvider'
 
 /**
  *
@@ -15,8 +15,8 @@ import { PlayingAnimation } from '../base/view/PlayingAnimation'
  */
 @ComponentV2({ freezeWhenInactive: true })
 export struct HomePage {
-    @Local themeVM: ThemeVM = AppStorageV2.connect<ThemeVM>(ThemeVM, () => new ThemeVM())!
-    private playerVM: PlayerVM = AppStorageV2.connect<PlayerVM>(PlayerVM, () => new PlayerVM())!
+    @Local themeVM: ThemeVM = VMProvider.get().getVM("ThemeVM") as ThemeVM
+    private playerVM: PlayerVM = VMProvider.get().getVM("PlayerVM") as PlayerVM
     private navigation = new NavPathStack()
     @Local gradientRadius: number = 0
     @Local selectedTabIndex: number = 0
