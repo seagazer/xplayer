@@ -1,5 +1,5 @@
 import { ThemeVM } from '../home/tabs/vm/ThemeVM'
-import { duration2Text, stringToHex } from '../base/extensions/Extensions'
+import { duration2Text } from '../base/extensions/Extensions'
 import { AlignMode, CcLyricView } from '@seagazer/cclyric'
 import { XLogger } from '../base/extensions/XLogger'
 import { PlayerVM } from './vm/PlayerVM'
@@ -58,16 +58,14 @@ export struct PlayerPage {
 
     aboutToAppear(): void {
         this.lyricVM.controller
-            .setLineSpace(12)
-            .setTextSize(22)
-            .setHighlightScale(1.1)
-            // "#ccbdbdbd"
-            .setKrcTextBgColor(0xccbdbdbd)
-            .setTextColor(0xccffffff)
+            .setLineSpace(16)
+            .setTextSize(20)
+            .setHighlightScale(1.2)
+            .setKrcTextBgColor(0xa6bdbdbd)   // "#ccbdbdbd"
+            .setTextColor(0xa6ffffff)
             // .setTextColor(stringToHex(this.themeVM!.primaryColor))
             // .setTextHighlightColor(stringToHex(this.themeVM!.primaryColorDark))
-            // "#ff1c1c1c"
-            .setTextHighlightColor(0xff1c1c1c)
+            .setTextHighlightColor(0xe61c1c1c)    //"#e61c1c1c"
             .setEmptyHint("未找到歌词")
             .setFadePercent(0.25)
             .setAlignMode(this.settingsVM.lyricAlignLeft ? AlignMode.START : AlignMode.CENTER)
@@ -89,12 +87,11 @@ export struct PlayerPage {
                 .width(40)
                 .height(40)
                 .border({ radius: 20 })
-                .backgroundColor("#33ffffff")
+                .backgroundColor("#4dffffff")
                 .margin({ left: 16 })
                 .onClick(() => {
                     this.back()
                 })
-
 
                 Row() {
                     Column() {
@@ -103,7 +100,7 @@ export struct PlayerPage {
                             .height(240)
                         Text("  " + this.playerVM.mediaTitle + "  ")
                             .textAlign(TextAlign.Center)
-                            .fontColor(this.themeVM?.primaryColor)
+                            .fontColor("#a6ffffff")
                             .fontSize(24)
                             .maxLines(1)
                             .textOverflow({ overflow: TextOverflow.MARQUEE })
@@ -119,7 +116,7 @@ export struct PlayerPage {
                             .padding({ left: 32, right: 32 })
                         Text("  " + this.playerVM.mediaArtist + "  ")
                             .textAlign(TextAlign.Center)
-                            .fontColor(this.themeVM?.primaryColor)
+                            .fontColor("#a6ffffff")
                             .fontSize(18)
                             .maxLines(1)
                             .textOverflow({ overflow: TextOverflow.MARQUEE })
