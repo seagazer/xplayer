@@ -6,9 +6,9 @@ import { common, wantAgent } from '@kit.AbilityKit'
 import { ImageLoader } from '../../base/http/ImageLoader'
 import { ThemeVM } from '../../home/tabs/vm/ThemeVM'
 import { SettingsVM } from '../../home/tabs/vm/SettingsVM'
-import { AppStorageV2 } from '@kit.ArkUI'
 import { UIConstants } from '../../base/UIConstants'
 import { VMProvider } from '../../VMProvider'
+import { LyricVM } from './LyricVM'
 
 
 const TAG = "[PlayerVM]"
@@ -32,8 +32,16 @@ export class PlayerVM implements IVM {
     private context?: UIContext = undefined
     private player?: CcPlayer = undefined
     private isSeeking = false
+    private lyricVm?: LyricVM
     private preparedListener = () => {
         this.duration = this.player!.getDuration()
+        // auto change lyric when prepared changed
+        if (this.currentItem !== undefined) {
+            if (this.lyricVm === undefined) {
+                this.lyricVm = VMProvider.get().getVM("LyricVM") as LyricVM
+            }
+            this.lyricVm.setLyric(this.currentItem)
+        }
     }
     private progressListener = (position: number) => {
         this.playerProgress = position

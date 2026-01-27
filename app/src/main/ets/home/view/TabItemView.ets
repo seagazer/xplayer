@@ -34,9 +34,3 @@ export struct TabItemView {
     }
 }
 
-
-class TabItemStyle implements AttributeModifier<RowAttribute> {
-    applyFocusedAttribute(instance: RowAttribute): void {
-
-    }
-}

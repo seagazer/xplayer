@@ -1,6 +1,7 @@
 import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
+import { VMProvider } from '../VMProvider';
 
 const DOMAIN = 0x0000;
 
@@ -16,6 +17,7 @@ export default class EntryAbility extends UIAbility {
 
     onDestroy(): void {
         hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onDestroy');
+        VMProvider.get().onDestroy()
     }
 
     onWindowStageCreate(windowStage: window.WindowStage): void {

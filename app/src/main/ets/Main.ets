@@ -1,5 +1,5 @@
 import { SettingsVM } from './home/tabs/vm/SettingsVM';
-import { AppStorageV2, PersistenceV2 } from '@kit.ArkUI';
+import { PersistenceV2 } from '@kit.ArkUI';
 import { RouterConstants, RouterMapper } from './base/Router';
 
 @Entry

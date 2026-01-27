@@ -6,8 +6,7 @@ import { PlayerVM } from './vm/PlayerVM'
 import { MediaLibraryVM } from '../home/tabs/vm/MediaLibraryVM'
 import { ImageView } from '../base/view/ImageView'
 import { UIConstants } from '../base/UIConstants'
-import { LyricParser } from '../base/LyricParser'
-import { MediaFile } from '../base/model/MediaFile'
+import { getLyric } from '../base/LyricParser'
 import { clickStyle } from '../base/Styles'
 import { VMProvider } from '../VMProvider'
 import { LyricVM } from './vm/LyricVM'
@@ -29,31 +28,11 @@ export struct PlayerPage {
     private lyricVM: LyricVM = VMProvider.get().getVM("LyricVM") as LyricVM
     @Local gradientRadius: number = 0
     private navPath = new NavPathStack()
-    private parser = new LyricParser()
     private clickCount = 0
 
     @Monitor("playerVM.playerProgress")
     onProgressChanged() {
         this.lyricVM.controller.updatePosition(this.playerVM.playerProgress)
-    }
-
-    @Monitor("playerVM.currentItem")
-    onMediaChanged() {
-        const playingItem = this.playerVM.currentItem
-        if (playingItem !== undefined) {
-            this.changeLyric(playingItem)
-        }
-    }
-
-    private changeLyric(playingItem: MediaFile) {
-        const title = playingItem.title
-        const uri = playingItem.uri
-        const index = uri.lastIndexOf("/")
-        XLogger.w(TAG, "uri= " + uri)
-        const lyricUri = uri.substring(0, index) + "/" + title + ".lrc"
-        XLogger.w(TAG, "lyric uri= " + lyricUri)
-        const lyric = this.parser.parseFile(lyricUri)
-        this.lyricVM.controller.setLyric(lyric)
     }
 
     aboutToAppear(): void {
@@ -70,7 +49,8 @@ export struct PlayerPage {
             .setFadePercent(0.25)
             .setAlignMode(this.settingsVM.lyricAlignLeft ? AlignMode.START : AlignMode.CENTER)
         if (this.playerVM.currentItem !== undefined) {
-            this.changeLyric(this.playerVM.currentItem)
+            const lyric = getLyric(this.playerVM.currentItem)
+            this.lyricVM.controller.setLyric(lyric)
         }
     }
 

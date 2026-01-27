@@ -1,4 +1,3 @@
-import { AppStorageV2 } from '@kit.ArkUI'
 import { clickStyle } from '../../../base/Styles'
 import { PlayerVM } from '../../../player/vm/PlayerVM'
 import { VMProvider } from '../../../VMProvider'

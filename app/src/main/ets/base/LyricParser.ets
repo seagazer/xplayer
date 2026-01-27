@@ -2,6 +2,7 @@ import { Lrc, LrcLine, LrcWord } from '@seagazer/cclyric';
 import { fileIo } from '@kit.CoreFileKit';
 import { util } from '@kit.ArkTS';
 import { XLogger } from './extensions/XLogger';
+import { MediaFile } from './model/MediaFile';
 
 
 const TAG = "[LyricParser]"
@@ -11,8 +12,23 @@ const TAG = "[LyricParser]"
  * Author: Seagazer
  * Date: 2026/1/22
  */
+
+export function getLyric(mediaFile: MediaFile) {
+    const title = mediaFile.title
+    const uri = mediaFile.uri
+    const index = uri.lastIndexOf("/")
+    XLogger.w(TAG, "uri= " + uri)
+    const lyricUri = uri.substring(0, index) + "/" + title + ".lrc"
+    XLogger.w(TAG, "lyric uri= " + lyricUri)
+    const lyric = LyricParser.parseFile(lyricUri)
+    return lyric
+}
+
 export class LyricParser {
-    parseFile(filePath: string): Lrc | undefined {
+    private constructor() {
+    }
+
+    static parseFile(filePath: string): Lrc | undefined {
         filePath = encodeURI(filePath).replace("%EF%BB%BF", "")
         let fd = -1
         try {
@@ -24,7 +40,7 @@ export class LyricParser {
             const decoder = util.TextDecoder.create('utf-8')
             const content = decoder.decodeToString(new Uint8Array(buffer))
             const lines = content.split(/\r?\n/)
-            return this.parseStringLines(lines)
+            return LyricParser.parseStringLines(lines)
         } catch (error) {
             XLogger.e(TAG, "parse file error= " + JSON.stringify(error))
         } finally {
@@ -35,7 +51,7 @@ export class LyricParser {
         return undefined
     }
 
-    parseStringLines(lyricLines: string[]): Lrc {
+    static parseStringLines(lyricLines: string[]): Lrc {
         const lyric: Lrc = {
             lyricList: []
         };

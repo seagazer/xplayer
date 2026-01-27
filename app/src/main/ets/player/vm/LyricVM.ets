@@ -1,5 +1,9 @@
 import { CcLyricController, Lrc } from '@seagazer/cclyric';
 import { IVM } from '../../base/IVM';
+import { getLyric } from '../../base/LyricParser';
+import { MediaFile } from '../../base/model/MediaFile';
+
+const TAG = "[LyricVM]"
 
 /**
  *
@@ -16,6 +20,11 @@ export class LyricVM implements IVM {
     }
 
     onDestroy(): void {
+    }
+
+    setLyric(item: MediaFile) {
+        const lyric = getLyric(item)
+        this.controller.setLyric(lyric)
     }
 }
 
