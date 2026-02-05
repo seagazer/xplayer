@@ -3,7 +3,7 @@
   "description": "Please describe the basic information.",
   "dependencies": {
     "@seagazer/ccplayer": "^1.3.0",
-    "@seagazer/cclyric": "^1.1.2"
+    "@seagazer/cclyric": "file:./lib.har"
   },
   "devDependencies": {
     "@ohos/hypium": "1.0.24",
